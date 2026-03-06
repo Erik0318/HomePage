@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ERIKDEV.CC — Home</title>
+  <title>ERIKDEV.CC — About me</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css?v=20260306" />
 </head>
-<body data-page="home">
+<body data-page="about">
   <div class="site-vignette" aria-hidden="true"></div>
   <div class="grain-overlay" aria-hidden="true"></div>
   <header class="site-header">
     <nav class="top-nav" aria-label="Primary">
       <a class="wordmark" href="index.html">ERIKDEV.CC</a>
       <div class="nav-links">
-        <a href="index.html" aria-current="page">Home</a>
+        <a href="index.html">Home</a>
         <a href="projects.html">Projects</a>
-        <a href="about.html">About me</a>
+        <a href="about.html" aria-current="page">About me</a>
         <a href="blogs.html">Blogs</a>
         <a href="things.html">Things I love &amp; hate</a>
         <a href="albums.html">Albums</a>
@@ -27,19 +27,17 @@
     </nav>
   </header>
 
-  <main class="page-wrap" id="main-content">
-    <section class="home-hero" aria-labelledby="home-title">
-      <p class="kicker">Entrance</p>
-      <h1 class="page-title" id="home-title">A curated static archive.</h1>
-      <p class="page-intro">Minimal, dark, and frame-based.</p>
-      <div class="button-row">
-        <a class="button-link" href="projects.html">Open Projects</a>
-        <a class="button-link" href="blogs.html">Open Blogs</a>
-      </div>
-    </section>
+  <main class="page-wrap">
+    <article class="reading-column">
+      <h1 class="page-title">About me</h1>
+      <p class="page-intro">Long-form area with restrained spacing and readable measure.</p>
+      <p>Section block 01.</p>
+      <p>Section block 02.</p>
+      <p>Section block 03.</p>
+    </article>
   </main>
 
-  <footer class="footer-edge">Static • Cloudflare Pages ready</footer>
+  <footer class="footer-edge">Typography-first reading layout</footer>
   <script src="main.js?v=20260306"></script>
 </body>
 </html>

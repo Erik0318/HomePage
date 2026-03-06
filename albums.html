@@ -3,43 +3,49 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ERIKDEV.CC — Home</title>
+  <title>ERIKDEV.CC — Albums</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css?v=20260306" />
 </head>
-<body data-page="home">
+<body data-page="albums">
   <div class="site-vignette" aria-hidden="true"></div>
   <div class="grain-overlay" aria-hidden="true"></div>
   <header class="site-header">
     <nav class="top-nav" aria-label="Primary">
       <a class="wordmark" href="index.html">ERIKDEV.CC</a>
       <div class="nav-links">
-        <a href="index.html" aria-current="page">Home</a>
+        <a href="index.html">Home</a>
         <a href="projects.html">Projects</a>
         <a href="about.html">About me</a>
         <a href="blogs.html">Blogs</a>
         <a href="things.html">Things I love &amp; hate</a>
-        <a href="albums.html">Albums</a>
+        <a href="albums.html" aria-current="page">Albums</a>
       </div>
       <button class="grain-toggle" type="button" data-grain-toggle>Grain: On</button>
     </nav>
   </header>
 
-  <main class="page-wrap" id="main-content">
-    <section class="home-hero" aria-labelledby="home-title">
-      <p class="kicker">Entrance</p>
-      <h1 class="page-title" id="home-title">A curated static archive.</h1>
-      <p class="page-intro">Minimal, dark, and frame-based.</p>
-      <div class="button-row">
-        <a class="button-link" href="projects.html">Open Projects</a>
-        <a class="button-link" href="blogs.html">Open Blogs</a>
-      </div>
-    </section>
+  <main class="page-wrap">
+    <h1 class="page-title">Albums</h1>
+    <p class="page-intro">Grid with keyboard lightbox controls.</p>
+    <section class="album-grid" id="albumGrid" aria-label="Album thumbnails"></section>
   </main>
 
-  <footer class="footer-edge">Static • Cloudflare Pages ready</footer>
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <div class="lightbox-panel" role="dialog" aria-modal="true" aria-label="Image viewer">
+      <div class="lightbox-controls">
+        <button class="icon-button" id="prevBtn" aria-label="Previous image" type="button">Prev</button>
+        <button class="icon-button" id="closeBtn" aria-label="Close lightbox" type="button">Close</button>
+        <button class="icon-button" id="nextBtn" aria-label="Next image" type="button">Next</button>
+      </div>
+      <img id="lightboxImage" src="" alt="" />
+      <p id="lightboxCaption"></p>
+    </div>
+  </div>
+
+  <footer class="footer-edge">Escape to close • Arrow keys to navigate</footer>
   <script src="main.js?v=20260306"></script>
 </body>
 </html>
