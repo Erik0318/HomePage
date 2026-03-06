@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ERIKDEV.CC — Home</title>
+  <title>ERIKDEV.CC — Projects</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body data-page="home">
+<body data-page="projects">
   <div class="site-vignette" aria-hidden="true"></div>
   <div class="grain-overlay" aria-hidden="true"></div>
   <header class="site-header">
     <nav class="top-nav" aria-label="Primary">
       <a class="wordmark" href="index.html">ERIKDEV.CC</a>
       <div class="nav-links">
-        <a href="index.html" aria-current="page">Home</a>
-        <a href="projects.html">Projects</a>
+        <a href="index.html">Home</a>
+        <a href="projects.html" aria-current="page">Projects</a>
         <a href="about.html">About me</a>
         <a href="blogs.html">Blogs</a>
         <a href="things.html">Things I love &amp; hate</a>
@@ -27,19 +27,32 @@
     </nav>
   </header>
 
-  <main class="page-wrap" id="main-content">
-    <section class="home-hero" aria-labelledby="home-title">
-      <p class="kicker">Entrance</p>
-      <h1 class="page-title" id="home-title">A curated static archive.</h1>
-      <p class="page-intro">Minimal, dark, and frame-based.</p>
-      <div class="button-row">
-        <a class="button-link" href="projects.html">Open Projects</a>
-        <a class="button-link" href="blogs.html">Open Blogs</a>
-      </div>
+  <main class="page-wrap">
+    <h1 class="page-title">Projects</h1>
+    <p class="page-intro">Exhibition wall.</p>
+    <section class="card-grid" aria-label="Project cards">
+      <a class="card-link" href="https://filmstats.erikdev.cc" target="_blank" rel="noopener noreferrer">
+        <article class="card">
+          <h2 class="card-title">Filmstats</h2>
+          <p class="card-text">External project in a new tab.</p>
+        </article>
+      </a>
+      <a class="card-link" href="about.html">
+        <article class="card">
+          <h2 class="card-title">Profile</h2>
+          <p class="card-text">Internal module.</p>
+        </article>
+      </a>
+      <a class="card-link" href="albums.html">
+        <article class="card">
+          <h2 class="card-title">Album Grid</h2>
+          <p class="card-text">Lightbox-driven gallery.</p>
+        </article>
+      </a>
     </section>
   </main>
 
-  <footer class="footer-edge">Static • Cloudflare Pages ready</footer>
+  <footer class="footer-edge">Consistent cards • keyboard focus ready</footer>
   <script src="main.js"></script>
 </body>
 </html>
