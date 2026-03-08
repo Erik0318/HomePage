@@ -11,7 +11,8 @@
 </head>
 <body data-page="about">
   <div class="site-vignette" aria-hidden="true"></div>
-  <div class="grain-overlay" aria-hidden="true"></div>
+  <div class="custom-cursor" id="customCursor"></div>
+  <div class="particles-container" id="particlesContainer"></div>
   <header class="site-header">
     <nav class="top-nav" aria-label="Primary">
       <a class="wordmark" href="index.html">ERIKDEV.CC</a>
@@ -23,17 +24,44 @@
         <a href="things.html">Things I love &amp; hate</a>
         <a href="albums.html">Albums</a>
       </div>
-      <button class="grain-toggle" type="button" data-grain-toggle>Grain: On</button>
     </nav>
   </header>
 
   <main class="page-wrap">
     <article class="reading-column">
       <h1 class="page-title">About me</h1>
-      <p class="page-intro">Long-form area with restrained spacing and readable measure.</p>
-      <p>Section block 01.</p>
-      <p>Section block 02.</p>
-      <p>Section block 03.</p>
+      <p class="page-intro">Feel free to check.</p>
+
+      <section class="social-links" aria-label="Social media and contact links">
+        <div class="social-list">
+          <a href="https://github.com/Erik0318" class="social-link" target="_blank" rel="noopener noreferrer">
+            <img src="assets/images/Logos/Github.png" alt="GitHub" class="social-logo" />
+            <span class="social-label">GitHub</span>
+          </a>
+          <a href="https://steamcommunity.com/id/3r1c_vhku/" class="social-link" target="_blank" rel="noopener noreferrer">
+            <img src="assets/images/Logos/Steam.png" alt="Steam" class="social-logo" />
+            <span class="social-label">Steam</span>
+          </a>
+          <a href="https://letterboxd.com/ErikvhUA/" class="social-link" target="_blank" rel="noopener noreferrer">
+            <img src="assets/images/Logos/Letterboxd.png" alt="Letterboxd" class="social-logo" />
+            <span class="social-label">Letterboxd</span>
+          </a>
+          <a href="https://open.spotify.com/user/314bbofobhic5xuzptr6u7uv4zai?si=74c1f69201cd498f" class="social-link" target="_blank" rel="noopener noreferrer">
+            <img src="assets/images/Logos/Spotify.png" alt="Spotify" class="social-logo" />
+            <span class="social-label">Spotify</span>
+          </a>
+          <a href="https://www.youtube.com/@3r1cvhku" class="social-link" target="_blank" rel="noopener noreferrer">
+            <img src="assets/images/Logos/Youtube.png" alt="YouTube" class="social-logo" />
+            <span class="social-label">YouTube</span>
+          </a>
+          <a href="mailto:zcw370202@gmail.com" class="social-link">
+            <img src="assets/images/Logos/Email.png" alt="Email" class="social-logo" />
+            <span class="social-label">Email</span>
+          </a>
+        </div>
+      </section>
+
+      <p>Hi. I'm a high school student interested in a lot of things.</p>
     </article>
   </main>
 

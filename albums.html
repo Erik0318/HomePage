@@ -11,7 +11,8 @@
 </head>
 <body data-page="albums">
   <div class="site-vignette" aria-hidden="true"></div>
-  <div class="grain-overlay" aria-hidden="true"></div>
+  <div class="custom-cursor" id="customCursor"></div>
+  <div class="particles-container" id="particlesContainer"></div>
   <header class="site-header">
     <nav class="top-nav" aria-label="Primary">
       <a class="wordmark" href="index.html">ERIKDEV.CC</a>
@@ -23,13 +24,12 @@
         <a href="things.html">Things I love &amp; hate</a>
         <a href="albums.html" aria-current="page">Albums</a>
       </div>
-      <button class="grain-toggle" type="button" data-grain-toggle>Grain: On</button>
     </nav>
   </header>
 
   <main class="page-wrap">
     <h1 class="page-title">Albums</h1>
-    <p class="page-intro">Grid with keyboard lightbox controls.</p>
+    <p class="page-intro">Trying to be a better photographer.</p>
     <section class="album-grid" id="albumGrid" aria-label="Album thumbnails"></section>
   </main>
 
@@ -41,6 +41,7 @@
         <button class="icon-button" id="nextBtn" aria-label="Next image" type="button">Next</button>
       </div>
       <img id="lightboxImage" src="" alt="" />
+      <div class="lightbox-index" id="lightboxIndex"></div>
       <p id="lightboxCaption"></p>
     </div>
   </div>
