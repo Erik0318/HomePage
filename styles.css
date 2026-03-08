@@ -21,7 +21,7 @@
 
   --radius: 0.25rem;
   --frame-width: min(1080px, 92vw);
-  --reading-width: 68ch;
+  --reading-width: 100ch;
 
   --mono: "IBM Plex Mono", "SFMono-Regular", ui-monospace, monospace;
   --serif: "Cormorant Garamond", "Times New Roman", serif;
@@ -176,7 +176,7 @@ a {
 .page-intro {
   margin: 0 0 var(--space-5);
   color: var(--muted);
-  max-width: var(--reading-width);
+  max-width: none;
 }
 
 .footer-edge {
@@ -274,7 +274,7 @@ a {
    Page: About + Blogs
 ===================== */
 .reading-column {
-  max-width: var(--reading-width);
+  max-width: none;
 }
 
 .log-list {
@@ -590,55 +590,59 @@ a {
 }
 
 .social-list {
-  display: grid;
-  grid-template-columns: repeat(6, max-content);
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: clamp(8px, 1.2vw, 12px);
   width: 100%;
   margin: 0 auto;
 }
 
 .social-link {
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   background: var(--surface);
-  padding: 10px 12px;
+  padding: clamp(10px, 1vw, 12px) clamp(12px, 1.4vw, 16px);
   border-radius: var(--radius);
   text-decoration: none;
-  transition: transform 0.3s ease, background-color 0.3s ease;
+  transition: transform 0.25s ease, background-color 0.25s ease;
   white-space: nowrap;
 }
 
 .social-link:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
   background-color: var(--accent);
 }
 
+.social-link:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .social-logo {
-  width: 30px;
-  height: 30px;
-  margin-right: 6px;
+  width: clamp(26px, 2.2vw, 32px);
+  height: clamp(26px, 2.2vw, 32px);
   flex-shrink: 0;
 }
 
 .social-label {
-  font-family: 'Consolas', monospace;
-  font-size: 0.88rem;
+  font-family: "Consolas", monospace;
+  font-size: clamp(0.88rem, 1vw, 0.95rem);
   line-height: 1;
   color: var(--text);
   white-space: nowrap;
 }
 
-@media (max-width: 1100px) {
-  .social-list {
-    grid-template-columns: repeat(3, max-content);
+@media (prefers-reduced-motion: reduce) {
+  .social-link {
+    transition: none;
   }
-}
 
-@media (max-width: 700px) {
-  .social-list {
-    grid-template-columns: repeat(2, max-content);
+  .social-link:hover {
+    transform: none;
   }
 }

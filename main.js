@@ -240,9 +240,10 @@ const albums = [
       let mouseY = 0;
       let cursorX = 0;
       let cursorY = 0;
+      let hasMoved = false;
 
-      // Make cursor visible initially
-      cursor.style.opacity = '1';
+      // Hide cursor initially until mouse moves
+      cursor.style.opacity = '0';
       cursor.style.display = 'block';
 
       // Smooth cursor movement
@@ -260,6 +261,11 @@ const albums = [
       document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
+
+        if (!hasMoved) {
+          hasMoved = true;
+          cursor.style.opacity = '1';
+        }
 
         // Create particle occasionally
         if (Math.random() < 0.3) { // 30% chance
@@ -292,10 +298,13 @@ const albums = [
       // Hide cursor on mouse leave
       document.addEventListener('mouseleave', () => {
         cursor.style.opacity = '0';
+        hasMoved = false;
       });
 
       document.addEventListener('mouseenter', () => {
-        cursor.style.opacity = '1';
+        if (hasMoved) {
+          cursor.style.opacity = '1';
+        }
       });
 
       // Start animation
