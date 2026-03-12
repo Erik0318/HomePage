@@ -1,4 +1,34 @@
 /* =========================
+   Page Views Counter (localStorage)
+========================= */
+(function initViewCounter() {
+  // Only run on home page
+  if (document.body.dataset.page !== 'home') return;
+
+  const VIEW_STORAGE_KEY = 'homepage-total-views';
+  const viewCountElement = document.getElementById('viewCount');
+
+  if (!viewCountElement) return;
+
+  // Get current view count from localStorage
+  let currentViews = localStorage.getItem(VIEW_STORAGE_KEY);
+  
+  if (currentViews === null) {
+    // First visit, initialize to 1
+    currentViews = 1;
+  } else {
+    // Increment existing count
+    currentViews = parseInt(currentViews, 10) + 1;
+  }
+
+  // Save back to localStorage
+  localStorage.setItem(VIEW_STORAGE_KEY, currentViews);
+
+  // Display the count
+  viewCountElement.textContent = currentViews;
+})();
+
+/* =========================
    Blogs page polish
 ========================= */
 (function initBlogEntries() {
@@ -194,10 +224,9 @@ const albums = [
 })();
 
 /* =========================
-   Custom Cursor & Particles
+   Custom Cursor & Click Particles
 ========================= */
 (function initCustomCursor() {
-  // Wait for DOM to be fully loaded
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initCursor);
   } else {
@@ -205,35 +234,25 @@ const albums = [
   }
 
   function initCursor() {
-    // Small delay to ensure elements are rendered
     setTimeout(() => {
-      const cursor = document.getElementById('customCursor');
-      const particlesContainer = document.getElementById('particlesContainer');
-
-      // Debug: check if elements exist
-      console.log('Custom cursor initialization on page:', document.body.dataset.page);
-      console.log('Custom cursor elements:', { cursor, particlesContainer });
+      let cursor = document.getElementById('customCursor');
+      let particlesContainer = document.getElementById('particlesContainer');
 
       if (!cursor || !particlesContainer) {
-        console.warn('Custom cursor elements not found, creating them...');
-
-        // Try to create elements if they don't exist
         if (!cursor) {
           const newCursor = document.createElement('div');
           newCursor.className = 'custom-cursor';
           newCursor.id = 'customCursor';
           document.body.appendChild(newCursor);
+          cursor = newCursor;
         }
         if (!particlesContainer) {
           const newContainer = document.createElement('div');
           newContainer.className = 'particles-container';
           newContainer.id = 'particlesContainer';
           document.body.appendChild(newContainer);
+          particlesContainer = newContainer;
         }
-
-        // Retry initialization
-        setTimeout(initCursor, 100);
-        return;
       }
 
       let mouseX = 0;
@@ -242,11 +261,9 @@ const albums = [
       let cursorY = 0;
       let hasMoved = false;
 
-      // Hide cursor initially until mouse moves
       cursor.style.opacity = '0';
       cursor.style.display = 'block';
 
-      // Smooth cursor movement
       function updateCursor() {
         cursorX += (mouseX - cursorX) * 0.15;
         cursorY += (mouseY - cursorY) * 0.15;
@@ -257,7 +274,6 @@ const albums = [
         requestAnimationFrame(updateCursor);
       }
 
-      // Mouse move handler
       document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
@@ -266,36 +282,42 @@ const albums = [
           hasMoved = true;
           cursor.style.opacity = '1';
         }
-
-        // Create particle occasionally
-        if (Math.random() < 0.3) { // 30% chance
-          createParticle(mouseX, mouseY);
-        }
       });
 
-      // Create particle
-      function createParticle(x, y) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = x + 'px';
-        particle.style.top = y + 'px';
+      // Generate particles on click
+      document.addEventListener('click', (e) => {
+        createRadialParticles(e.clientX, e.clientY);
+      });
 
-        // Random slight offset
-        const offsetX = (Math.random() - 0.5) * 20;
-        const offsetY = (Math.random() - 0.5) * 20;
-        particle.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+      // Create radial particles from click point
+      function createRadialParticles(x, y) {
+        const particleCount = 7;
+        const distance = 60;
+        const angleStep = (Math.PI * 2) / particleCount;
 
-        particlesContainer.appendChild(particle);
+        for (let i = 0; i < particleCount; i++) {
+          const angle = angleStep * i + (Math.random() - 0.5) * 0.4;
+          const tx = Math.cos(angle) * distance;
+          const ty = Math.sin(angle) * distance;
 
-        // Remove particle after animation
-        setTimeout(() => {
-          if (particle.parentNode) {
-            particle.parentNode.removeChild(particle);
-          }
-        }, 1500);
+          const particle = document.createElement('div');
+          particle.className = 'particle';
+          particle.style.left = x + 'px';
+          particle.style.top = y + 'px';
+          particle.style.setProperty('--tx', `translateX(${tx}px)`);
+          particle.style.setProperty('--ty', `translateY(${ty}px)`);
+
+          particlesContainer.appendChild(particle);
+
+          // Remove after animation
+          setTimeout(() => {
+            if (particle.parentNode) {
+              particle.parentNode.removeChild(particle);
+            }
+          }, 1200);
+        }
       }
 
-      // Hide cursor on mouse leave
       document.addEventListener('mouseleave', () => {
         cursor.style.opacity = '0';
         hasMoved = false;
@@ -307,10 +329,7 @@ const albums = [
         }
       });
 
-      // Start animation
       updateCursor();
-
-      console.log('Custom cursor initialized successfully on page:', document.body.dataset.page);
     }, 100);
   }
 })();
