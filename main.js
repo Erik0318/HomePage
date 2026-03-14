@@ -1,31 +1,79 @@
 /* =========================
-   Page Views Counter (localStorage)
+   Page Views Counter (Cloud Storage via jsonbin.io)
 ========================= */
 (function initViewCounter() {
   // Only run on home page
   if (document.body.dataset.page !== 'home') return;
 
-  const VIEW_STORAGE_KEY = 'homepage-total-views';
   const viewCountElement = document.getElementById('viewCount');
-
   if (!viewCountElement) return;
 
-  // Get current view count from localStorage
-  let currentViews = localStorage.getItem(VIEW_STORAGE_KEY);
+  // Unique ID for this website's view counter
+  // Using a combination of domain/hash as identifier
+  const COUNTER_ID = 'erikdev-homepage-views-v1';
   
-  if (currentViews === null) {
-    // First visit, initialize to 1
-    currentViews = 1;
-  } else {
-    // Increment existing count
-    currentViews = parseInt(currentViews, 10) + 1;
+  // jsonbin.io free endpoint (no authentication needed for simple usage)
+  const JSONBIN_API = 'https://jsonbin.io/v3/b';
+
+  // Try to update view count from cloud
+  updateViewCount();
+
+  async function updateViewCount() {
+    try {
+      // First, try to fetch existing counter
+      const response = await fetch(`${JSONBIN_API}/${COUNTER_ID}`);
+      
+      let currentViews = 1;
+      let binId = null;
+
+      if (response.ok) {
+        const data = await response.json();
+        binId = data.metadata.id;
+        currentViews = (data.record.views || 0) + 1;
+      } else if (response.status === 404) {
+        // First visit, create new bin
+        currentViews = 1;
+      }
+
+      // Update the display immediately (optimistic update)
+      viewCountElement.textContent = currentViews;
+
+      // Save back to cloud
+      await saveViewCount(currentViews, binId);
+
+      // Also save to localStorage as fallback
+      localStorage.setItem('homepage-views-backup', currentViews);
+    } catch (error) {
+      console.warn('Cloud view counter unavailable, using local storage fallback:', error);
+      
+      // Fallback to localStorage if cloud fails
+      let views = localStorage.getItem('homepage-views-backup');
+      views = views ? parseInt(views, 10) + 1 : 1;
+      localStorage.setItem('homepage-views-backup', views);
+      viewCountElement.textContent = views;
+    }
   }
 
-  // Save back to localStorage
-  localStorage.setItem(VIEW_STORAGE_KEY, currentViews);
+  async function saveViewCount(views, binId) {
+    try {
+      const url = binId 
+        ? `${JSONBIN_API}/${binId}`
+        : JSONBIN_API;
 
-  // Display the count
-  viewCountElement.textContent = currentViews;
+      const options = {
+        method: binId ? 'PUT' : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Bin-Name': COUNTER_ID
+        },
+        body: JSON.stringify({ views: views })
+      };
+
+      await fetch(url, options);
+    } catch (error) {
+      console.warn('Failed to save view count to cloud:', error);
+    }
+  }
 })();
 
 /* =========================
