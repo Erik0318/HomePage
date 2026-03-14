@@ -1,5 +1,5 @@
 /* =========================
-   Page Views Counter (Cloud Storage via jsonbin.io)
+   Page Views Counter (Supabase Cloud)
 ========================= */
 (function initViewCounter() {
   // Only run on home page
@@ -8,70 +8,56 @@
   const viewCountElement = document.getElementById('viewCount');
   if (!viewCountElement) return;
 
-  // Unique ID for this website's view counter
-  // Using a combination of domain/hash as identifier
-  const COUNTER_ID = 'erikdev-homepage-views-v1';
-  
-  // jsonbin.io free endpoint (no authentication needed for simple usage)
-  const JSONBIN_API = 'https://jsonbin.io/v3/b';
+  // Supabase credentials
+  const SUPABASE_URL = 'https://disrkbremsepvyjuvzyv.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRpc3JrYnJlbXNlcHZ5anV2enl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0OTY0MzUsImV4cCI6MjA4OTA3MjQzNX0.BnjiiaNBePpq9CzaCIK8z7cWYRXQOwRsGaliGxmWtxA';
 
-  // Try to update view count from cloud
+  // Initialize Supabase client
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
   updateViewCount();
 
   async function updateViewCount() {
     try {
-      // First, try to fetch existing counter
-      const response = await fetch(`${JSONBIN_API}/${COUNTER_ID}`);
-      
-      let currentViews = 1;
-      let binId = null;
+      // Fetch current view count
+      const { data, error } = await supabase
+        .from('page_views')
+        .select('view_count')
+        .eq('page_name', 'homepage')
+        .single();
 
-      if (response.ok) {
-        const data = await response.json();
-        binId = data.metadata.id;
-        currentViews = (data.record.views || 0) + 1;
-      } else if (response.status === 404) {
-        // First visit, create new bin
-        currentViews = 1;
-      }
+      if (error) throw error;
 
-      // Update the display immediately (optimistic update)
-      viewCountElement.textContent = currentViews;
+      // Increment count
+      const newCount = (data?.view_count || 0) + 1;
 
-      // Save back to cloud
-      await saveViewCount(currentViews, binId);
+      // Update in database
+      const { error: updateError } = await supabase
+        .from('page_views')
+        .update({ 
+          view_count: newCount,
+          last_updated: new Date().toISOString()
+        })
+        .eq('page_name', 'homepage');
 
-      // Also save to localStorage as fallback
-      localStorage.setItem('homepage-views-backup', currentViews);
+      if (updateError) throw updateError;
+
+      // Display the updated count
+      viewCountElement.textContent = newCount;
+
+      // Store in localStorage as backup
+      localStorage.setItem('homepage-views-backup', newCount);
+
+      console.log('View count updated:', newCount);
     } catch (error) {
-      console.warn('Cloud view counter unavailable, using local storage fallback:', error);
-      
-      // Fallback to localStorage if cloud fails
+      console.warn('Supabase error, trying fallback:', error);
+
+      // Fallback to localStorage if Supabase fails
       let views = localStorage.getItem('homepage-views-backup');
       views = views ? parseInt(views, 10) + 1 : 1;
       localStorage.setItem('homepage-views-backup', views);
       viewCountElement.textContent = views;
-    }
-  }
-
-  async function saveViewCount(views, binId) {
-    try {
-      const url = binId 
-        ? `${JSONBIN_API}/${binId}`
-        : JSONBIN_API;
-
-      const options = {
-        method: binId ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Bin-Name': COUNTER_ID
-        },
-        body: JSON.stringify({ views: views })
-      };
-
-      await fetch(url, options);
-    } catch (error) {
-      console.warn('Failed to save view count to cloud:', error);
+      console.log('Using local fallback:', views);
     }
   }
 })();
