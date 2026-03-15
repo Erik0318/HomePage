@@ -4,25 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Forum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260306" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 0 16px;
-      line-height: 1.6;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-    }
-
-    .topbar a {
-      text-decoration: none;
-      color: blue;
+    .auth-nav {
+      font-size: 0.7rem;
+      gap: var(--space-3);
     }
 
     .post-list {
@@ -31,19 +20,30 @@
     }
 
     .post-card {
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       padding: 16px;
+      background: var(--surface);
     }
 
     .post-card h2 {
       margin: 0 0 8px;
-      font-size: 20px;
+      font-size: 18px;
+      color: var(--text);
+    }
+
+    .post-card a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .post-card a:hover {
+      border-bottom: 1px solid var(--accent);
     }
 
     .meta {
-      font-size: 14px;
-      color: #666;
+      font-size: 13px;
+      color: var(--muted);
       margin-bottom: 8px;
     }
 
@@ -53,28 +53,158 @@
 
     #status {
       margin-bottom: 20px;
-      color: #444;
+      color: var(--muted);
+    }
+
+    #new-post-link {
+      font-size: 0.7rem;
     }
   </style>
 </head>
-<body>
-  <div class="topbar">
-    <h1>Forum</h1>
-    <div>
-      <a href="./login.html">Log in</a>
-      |
-      <a href="./register.html">Register</a>
-      |
-      <a href="./me.html">My Account</a>
-      |
-      <a id="new-post-link" class="hidden" href="./new-post.html">New Post</a>
-    </div>
-  </div>
+<body data-page="forum">
+  <div class="site-vignette" aria-hidden="true"></div>
+  <div class="custom-cursor" id="customCursor"></div>
+  <div class="particles-container" id="particlesContainer"></div>
+  <header class="site-header">
+    <nav class="top-nav" aria-label="Primary">
+      <a class="wordmark" href="index.html">ERIKDEV.CC</a>
+      <div class="nav-links auth-nav">
+        <div id="auth-links"></div>
+        <a id="new-post-link" class="hidden" href="./new-post.html">New Post</a>
+      </div>
+    </nav>
+  </header>
 
-  <div id="status">Loading...</div>
+  <main class="page-wrap">
+    <h1 class="page-title">Forum</h1>
 
-  <div id="post-list" class="post-list"></div>
+    <div id="status">Loading...</div>
 
-  <script type="module" src="./js/forum.js"></script>
+    <div id="post-list" class="post-list"></div>
+  </main>
+
+  <script src="main.js?v=20260306"></script>
+  <script type="module">
+    import { initTopbar } from "./js/topbar.js";
+    import { supabase } from "./js/supabase-client.js";
+
+    // Initialize topbar
+    initTopbar();
+
+    // Import and run forum.js logic
+    const statusEl = document.getElementById("status");
+    const newPostLink = document.getElementById("new-post-link");
+    const postListEl = document.getElementById("post-list");
+
+    async function initForumPage() {
+      const {
+        data: { session },
+        error: sessionError,
+      } = await supabase.auth.getSession();
+
+      if (sessionError) {
+        console.error("Failed to get session:", sessionError);
+        statusEl.textContent = "Failed to load session.";
+        return;
+      }
+
+      if (session?.user) {
+        newPostLink.classList.remove("hidden");
+        statusEl.textContent = `Logged in as ${session.user.email}`;
+      } else {
+        newPostLink.classList.add("hidden");
+        statusEl.textContent = "You are browsing as a guest.";
+      }
+
+      await loadPosts();
+    }
+
+    async function loadPosts() {
+      const { data: posts, error: postsError } = await supabase
+        .from("posts")
+        .select("id, author_id, title, content, country_code, created_at")
+        .order("created_at", { ascending: false });
+
+      if (postsError) {
+        console.error("Failed to load posts:", postsError);
+        statusEl.textContent = "Failed to load posts.";
+        return;
+      }
+
+      if (!posts || posts.length === 0) {
+        postListEl.innerHTML = "<p>No posts yet.</p>";
+        return;
+      }
+
+      const authorIds = [
+        ...new Set(posts.map((post) => post.author_id).filter(Boolean)),
+      ];
+
+      let profileMap = {};
+
+      if (authorIds.length > 0) {
+        const { data: profiles, error: profilesError } = await supabase
+          .from("profiles")
+          .select("id, username")
+          .in("id", authorIds);
+
+        if (profilesError) {
+          console.error("Failed to load profiles:", profilesError);
+        } else {
+          profileMap = Object.fromEntries(
+            profiles.map((profile) => [profile.id, profile.username]),
+          );
+        }
+      }
+
+      const postIds = posts.map((post) => post.id);
+
+      let scoreMap = {};
+
+      if (postIds.length > 0) {
+        const { data: votes, error: votesError } = await supabase
+          .from("post_votes")
+          .select("post_id, value")
+          .in("post_id", postIds);
+
+        if (votesError) {
+          console.error("Failed to load post votes:", votesError);
+        } else {
+          scoreMap = Object.fromEntries(postIds.map((postId) => [postId, 0]));
+
+          for (const vote of votes || []) {
+            scoreMap[vote.post_id] = (scoreMap[vote.post_id] || 0) + vote.value;
+          }
+        }
+      }
+
+      renderPosts(posts, profileMap, scoreMap);
+    }
+
+    function renderPosts(posts, profileMap, scoreMap) {
+      postListEl.innerHTML = '';
+
+      for (const post of posts) {
+        const card = document.createElement('article');
+        card.className = 'post-card';
+
+        const username = profileMap[post.author_id] || 'Unknown user';
+        const createdAt = new Date(post.created_at).toLocaleString();
+        const score = scoreMap[post.id] || 0;
+
+        card.innerHTML = `
+          <h2><a href="./post.html?id=${post.id}">${post.title}</a></h2>
+          <div class="meta">
+            By <strong>${username}</strong> · ${createdAt} · Score: ${score}
+          </div>
+          <p>${post.content}</p>
+        `;
+
+        postListEl.appendChild(card);
+      }
+    }
+
+    initForumPage();
+  </script>
 </body>
 </html>

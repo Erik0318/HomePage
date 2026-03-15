@@ -4,64 +4,97 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260306" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 640px;
-      margin: 40px auto;
-      padding: 0 16px;
-      line-height: 1.6;
-    }
-
-    h1 {
-      margin-bottom: 20px;
+    .auth-nav {
+      font-size: 0.7rem;
+      gap: var(--space-3);
     }
 
     .card {
-      border: 1px solid #ccc;
-      padding: 20px;
-      margin-top: 16px;
+      border: 1px solid var(--border);
+      padding: var(--space-4);
+      margin-top: var(--space-4);
+      background: var(--surface);
+      border-radius: var(--radius);
     }
 
     .row {
       margin-bottom: 10px;
       word-break: break-word;
+      color: var(--text);
+    }
+
+    .row strong {
+      color: var(--accent);
     }
 
     button, a.button-link {
       display: inline-block;
       padding: 10px 12px;
-      font-size: 16px;
+      font-size: 13px;
       margin-top: 12px;
       text-decoration: none;
-      color: black;
-      border: 1px solid #999;
-      background: #f3f3f3;
+      color: var(--text);
+      border: 1px solid var(--border);
+      background: var(--surface);
       cursor: pointer;
+      border-radius: var(--radius);
+      text-transform: uppercase;
+      font-family: var(--mono);
+    }
+
+    button:hover,
+    button:focus-visible,
+    a.button-link:hover,
+    a.button-link:focus-visible {
+      border-color: var(--accent);
     }
 
     #status {
       white-space: pre-wrap;
       margin-top: 16px;
+      color: var(--muted);
     }
   </style>
 </head>
-<body>
-  <h1>My Account</h1>
+<body data-page="account">
+  <div class="site-vignette" aria-hidden="true"></div>
+  <div class="custom-cursor" id="customCursor"></div>
+  <div class="particles-container" id="particlesContainer"></div>
+  <header class="site-header">
+    <nav class="top-nav" aria-label="Primary">
+      <a class="wordmark" href="index.html">ERIKDEV.CC</a>
+      <div class="nav-links auth-nav">
+        <div id="auth-links"></div>
+      </div>
+    </nav>
+  </header>
 
-  <div id="status">Loading...</div>
+  <main class="page-wrap">
+    <h1 class="page-title">My Account</h1>
 
-  <div id="accountCard" class="card" style="display:none;">
-    <div class="row"><strong>Email:</strong> <span id="email"></span></div>
-    <div class="row"><strong>Username:</strong> <span id="username"></span></div>
-    <div class="row"><strong>User ID:</strong> <span id="userId"></span></div>
-    <div class="row"><strong>Created at:</strong> <span id="createdAt"></span></div>
+    <div id="status">Loading...</div>
 
-    <button id="logoutBtn">Log out</button>
-  </div>
+    <div id="accountCard" class="card" style="display:none;">
+      <div class="row"><strong>Email:</strong> <span id="email"></span></div>
+      <div class="row"><strong>Username:</strong> <span id="username"></span></div>
+      <div class="row"><strong>User ID:</strong> <span id="userId"></span></div>
+      <div class="row"><strong>Created at:</strong> <span id="createdAt"></span></div>
 
+      <button id="logoutBtn">Log out</button>
+    </div>
+  </main>
+
+  <script src="main.js?v=20260306"></script>
   <script type="module">
+    import { initTopbar } from "./js/topbar.js";
     import { supabase } from './js/supabase-client.js'
+
+    initTopbar();
 
     const status = document.getElementById('status')
     const accountCard = document.getElementById('accountCard')

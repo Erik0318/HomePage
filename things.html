@@ -23,6 +23,8 @@
         <a href="blogs.html">Blogs</a>
         <a href="things.html" aria-current="page">Things I love &amp; hate</a>
         <a href="albums.html">Albums</a>
+        <div style="border-left: 1px solid var(--muted); margin: 0 var(--space-3); height: auto;"></div>
+        <div id="auth-links" style="font-size: 0.65rem;"></div>
       </div>
     </nav>
   </header>
@@ -53,5 +55,9 @@
 
   <footer class="footer-edge">Don't take them too seriously. They are just for fun.</footer>
   <script src="main.js?v=20260306"></script>
+  <script type="module">
+    import { initTopbar } from "./js/topbar.js";
+    initTopbar();
+  </script>
 </body>
 </html>

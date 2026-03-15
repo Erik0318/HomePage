@@ -4,17 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Register</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260306" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 520px;
-      margin: 40px auto;
-      padding: 0 16px;
-      line-height: 1.5;
-    }
-
-    h1 {
-      margin-bottom: 20px;
+    .auth-nav {
+      font-size: 0.7rem;
+      gap: var(--space-3);
     }
 
     form {
@@ -24,37 +21,85 @@
 
     input, button {
       padding: 10px 12px;
-      font-size: 16px;
+      font-size: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: var(--radius);
+    }
+
+    button {
+      cursor: pointer;
+      text-transform: uppercase;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      margin-top: 8px;
+    }
+
+    button:hover,
+    button:focus-visible {
+      border-color: var(--accent);
     }
 
     #result {
       margin-top: 16px;
       white-space: pre-wrap;
+      color: var(--text);
     }
 
     .links {
-      margin-top: 16px;
+      margin-top: var(--space-4);
+      color: var(--muted);
+    }
+
+    .links a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+
+    .links a:hover,
+    .links a:focus-visible {
+      border-color: var(--accent);
     }
   </style>
 </head>
-<body>
-  <h1>Create account</h1>
+<body data-page="register">
+  <div class="site-vignette" aria-hidden="true"></div>
+  <div class="custom-cursor" id="customCursor"></div>
+  <div class="particles-container" id="particlesContainer"></div>
+  <header class="site-header">
+    <nav class="top-nav" aria-label="Primary">
+      <a class="wordmark" href="index.html">ERIKDEV.CC</a>
+      <div class="nav-links auth-nav">
+        <div id="auth-links"></div>
+      </div>
+    </nav>
+  </header>
 
-  <form id="registerForm">
-    <input id="username" placeholder="username" minlength="3" maxlength="24" required />
-    <input id="email" type="email" placeholder="email" required />
-    <input id="password" type="password" placeholder="password" minlength="8" required />
-    <button type="submit">Register</button>
-  </form>
+  <main class="page-wrap">
+    <h1 class="page-title">Create account</h1>
 
-  <div id="result"></div>
+    <form id="registerForm">
+      <input id="username" placeholder="username" minlength="3" maxlength="24" required />
+      <input id="email" type="email" placeholder="email" required />
+      <input id="password" type="password" placeholder="password" minlength="8" required />
+      <button type="submit">Register</button>
+    </form>
 
-  <div class="links">
-    <a href="./login.html">Already have an account? Log in</a>
-  </div>
+    <div id="result"></div>
 
+    <div class="links">
+      <a href="./login.html">Already have an account? Log in</a>
+    </div>
+  </main>
+
+  <script src="main.js?v=20260306"></script>
   <script type="module">
+    import { initTopbar } from "./js/topbar.js";
     import { supabase } from './js/supabase-client.js'
+
+    initTopbar();
 
     const form = document.getElementById('registerForm')
     const result = document.getElementById('result')
@@ -114,7 +159,7 @@
         'Account created.\n\n' +
         'User ID: ' + (data.user?.id ?? 'not returned') + '\n' +
         'Email: ' + email + '\n\n' +
-        'If email confirmation is enabled, go confirm your email first, then come back and log in.'
+        'A confirmation email has been sent to your email! Please confirm your email first, then come back and log in.'
     })
   </script>
 </body>

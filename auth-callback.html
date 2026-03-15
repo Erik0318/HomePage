@@ -4,31 +4,61 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Auth Callback</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260306" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 520px;
-      margin: 40px auto;
-      padding: 0 16px;
-      line-height: 1.5;
+    .auth-nav {
+      font-size: 0.7rem;
+      gap: var(--space-3);
     }
+
     #status {
       white-space: pre-wrap;
       margin-top: 16px;
+      color: var(--text);
     }
-    a {
+
+    #nextLink {
       display: inline-block;
       margin-top: 12px;
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+
+    #nextLink:hover,
+    #nextLink:focus-visible {
+      border-color: var(--accent);
     }
   </style>
 </head>
-<body>
-  <h1>Finishing authentication</h1>
-  <div id="status">Please wait...</div>
-  <a id="nextLink" href="./login.html" style="display:none;">Continue</a>
+<body data-page="auth-callback">
+  <div class="site-vignette" aria-hidden="true"></div>
+  <div class="custom-cursor" id="customCursor"></div>
+  <div class="particles-container" id="particlesContainer"></div>
+  <header class="site-header">
+    <nav class="top-nav" aria-label="Primary">
+      <a class="wordmark" href="index.html">ERIKDEV.CC</a>
+      <div class="nav-links auth-nav">
+        <div id="auth-links"></div>
+      </div>
+    </nav>
+  </header>
 
+  <main class="page-wrap">
+    <h1 class="page-title">Finishing authentication</h1>
+    <div id="status">Please wait...</div>
+    <a id="nextLink" href="./login.html" style="display:none;">Continue</a>
+  </main>
+
+  <script src="main.js?v=20260306"></script>
   <script type="module">
+    import { initTopbar } from "./js/topbar.js";
     import { supabase } from './js/supabase-client.js'
+
+    initTopbar();
 
     const status = document.getElementById('status')
     const nextLink = document.getElementById('nextLink')
