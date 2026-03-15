@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 520px;
+        margin: 40px auto;
+        padding: 0 16px;
+        line-height: 1.5;
+      }
+
+      h1 {
+        margin-bottom: 20px;
+      }
+
+      form {
+        display: grid;
+        gap: 12px;
+      }
+
+      input,
+      button {
+        padding: 10px 12px;
+        font-size: 16px;
+      }
+
+      #result {
+        margin-top: 16px;
+        white-space: pre-wrap;
+      }
+
+      .links {
+        margin-top: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Log in</h1>
+
+    <form id="loginForm">
+      <input id="email" type="email" placeholder="email" required />
+      <input id="password" type="password" placeholder="password" required />
+      <button type="submit">Log in</button>
+    </form>
+
+    <div id="result"></div>
+
+    <div class="links">
+      <a href="./register.html">Need an account? Register</a>
+    </div>
+
+    <script type="module">
+      import { supabase } from "./js/supabase-client.js";
+
+      const form = document.getElementById("loginForm");
+      const result = document.getElementById("result");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        result.textContent = "Logging in...";
+
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) {
+          result.textContent = "Login failed: " + error.message;
+          return;
+        }
+
+        const user = data.user;
+
+        const { data: profile, error: profileError } = await supabase
+          .from("profiles")
+          .select("username")
+          .eq("id", user.id)
+          .single();
+
+        if (profileError) {
+          result.textContent =
+            "Login succeeded, but failed to load profile: " +
+            profileError.message;
+          return;
+        }
+
+        result.textContent =
+          "Login succeeded.\n\n" +
+          "Email: " +
+          user.email +
+          "\n" +
+          "Username: " +
+          profile.username +
+          "\n\n" +
+          "Redirecting to your account page...";
+
+        setTimeout(() => {
+          window.location.href = "./me.html";
+        }, 800);
+      });
+    </script>
+  </body>
+</html>

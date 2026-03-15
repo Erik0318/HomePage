@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auth Callback</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 520px;
+      margin: 40px auto;
+      padding: 0 16px;
+      line-height: 1.5;
+    }
+    #status {
+      white-space: pre-wrap;
+      margin-top: 16px;
+    }
+    a {
+      display: inline-block;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Finishing authentication</h1>
+  <div id="status">Please wait...</div>
+  <a id="nextLink" href="./login.html" style="display:none;">Continue</a>
+
+  <script type="module">
+    import { supabase } from './js/supabase-client.js'
+
+    const status = document.getElementById('status')
+    const nextLink = document.getElementById('nextLink')
+
+    async function run() {
+      status.textContent = 'Processing confirmation link...'
+
+      await new Promise(resolve => setTimeout(resolve, 800))
+
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession()
+
+      if (sessionError) {
+        status.textContent = 'Callback error: ' + sessionError.message
+        nextLink.style.display = 'inline-block'
+        return
+      }
+
+      if (sessionData.session) {
+        status.textContent =
+          'Email confirmed and session created.\n\n' +
+          'You can continue now.'
+        nextLink.style.display = 'inline-block'
+        return
+      }
+
+      const { data: userData, error: userError } = await supabase.auth.getUser()
+
+      if (userError) {
+        status.textContent = 'User check error: ' + userError.message
+        nextLink.style.display = 'inline-block'
+        return
+      }
+
+      if (userData.user) {
+        status.textContent =
+          'Email confirmed.\n\n' +
+          'You can go log in now.'
+        nextLink.style.display = 'inline-block'
+        return
+      }
+
+      status.textContent =
+        'No active session was found on this page.\n\n' +
+        'Try going back to login.'
+      nextLink.style.display = 'inline-block'
+    }
+
+    run()
+  </script>
+</body>
+</html>

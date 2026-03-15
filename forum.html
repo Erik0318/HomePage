@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forum</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 16px;
+      line-height: 1.6;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .topbar a {
+      text-decoration: none;
+      color: blue;
+    }
+
+    .post-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .post-card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .post-card h2 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .meta {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #status {
+      margin-bottom: 20px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <h1>Forum</h1>
+    <div>
+      <a href="./login.html">Log in</a>
+      |
+      <a href="./register.html">Register</a>
+      |
+      <a href="./me.html">My Account</a>
+      |
+      <a id="new-post-link" class="hidden" href="./new-post.html">New Post</a>
+    </div>
+  </div>
+
+  <div id="status">Loading...</div>
+
+  <div id="post-list" class="post-list"></div>
+
+  <script type="module" src="./js/forum.js"></script>
+</body>
+</html>

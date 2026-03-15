@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Post</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 16px;
+        line-height: 1.6;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+
+      .topbar a {
+        text-decoration: none;
+        color: blue;
+      }
+
+      .post-card {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 20px;
+      }
+
+      .post-card h1 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 32px;
+      }
+
+      .meta {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 20px;
+      }
+
+      .content {
+        white-space: pre-wrap;
+      }
+
+      #status {
+        margin-bottom: 20px;
+        color: #444;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topbar">
+      <h1>Post</h1>
+      <div>
+        <a href="./forum.html">Forum</a>
+        |
+        <a href="./me.html">My Account</a>
+      </div>
+    </div>
+
+    <div id="status">Loading post...</div>
+    <div id="post-actions"></div>
+    <div id="post-container"></div>
+
+    <hr style="margin: 32px 0" />
+
+    <section>
+      <h2>Comments</h2>
+
+      <div id="comment-form-status">Checking comment permission...</div>
+
+      <form id="comment-form" class="hidden" style="margin: 16px 0">
+        <textarea
+          id="comment-content"
+          maxlength="5000"
+          required
+          style="
+            width: 100%;
+            min-height: 120px;
+            padding: 10px;
+            font: inherit;
+            resize: vertical;
+          "
+          placeholder="Write a comment..."
+        ></textarea>
+        <div style="margin-top: 10px">
+          <button id="comment-submit-btn" type="submit">Post Comment</button>
+        </div>
+      </form>
+
+      <div id="comments-status">Loading comments...</div>
+      <div id="comments-list"></div>
+    </section>
+
+    <script type="module" src="./js/post.js"></script>
+  </body>
+</html>

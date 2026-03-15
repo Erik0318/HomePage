@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Account</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 640px;
+      margin: 40px auto;
+      padding: 0 16px;
+      line-height: 1.6;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .card {
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin-top: 16px;
+    }
+
+    .row {
+      margin-bottom: 10px;
+      word-break: break-word;
+    }
+
+    button, a.button-link {
+      display: inline-block;
+      padding: 10px 12px;
+      font-size: 16px;
+      margin-top: 12px;
+      text-decoration: none;
+      color: black;
+      border: 1px solid #999;
+      background: #f3f3f3;
+      cursor: pointer;
+    }
+
+    #status {
+      white-space: pre-wrap;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>My Account</h1>
+
+  <div id="status">Loading...</div>
+
+  <div id="accountCard" class="card" style="display:none;">
+    <div class="row"><strong>Email:</strong> <span id="email"></span></div>
+    <div class="row"><strong>Username:</strong> <span id="username"></span></div>
+    <div class="row"><strong>User ID:</strong> <span id="userId"></span></div>
+    <div class="row"><strong>Created at:</strong> <span id="createdAt"></span></div>
+
+    <button id="logoutBtn">Log out</button>
+  </div>
+
+  <script type="module">
+    import { supabase } from './js/supabase-client.js'
+
+    const status = document.getElementById('status')
+    const accountCard = document.getElementById('accountCard')
+    const emailEl = document.getElementById('email')
+    const usernameEl = document.getElementById('username')
+    const userIdEl = document.getElementById('userId')
+    const createdAtEl = document.getElementById('createdAt')
+    const logoutBtn = document.getElementById('logoutBtn')
+
+    async function loadPage() {
+      const { data: userData, error: userError } = await supabase.auth.getUser()
+
+      if (userError) {
+        status.textContent = 'Failed to read auth state: ' + userError.message
+        return
+      }
+
+      const user = userData.user
+
+      if (!user) {
+        window.location.href = './login.html'
+        return
+      }
+
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, username, created_at')
+        .eq('id', user.id)
+        .single()
+
+      if (profileError) {
+        status.textContent = 'Logged in, but failed to load profile: ' + profileError.message
+        return
+      }
+
+      status.textContent = 'You are logged in.'
+      accountCard.style.display = 'block'
+
+      emailEl.textContent = user.email ?? ''
+      usernameEl.textContent = profile.username ?? ''
+      userIdEl.textContent = user.id ?? ''
+      createdAtEl.textContent = profile.created_at ?? ''
+    }
+
+    logoutBtn.addEventListener('click', async () => {
+      const { error } = await supabase.auth.signOut()
+
+      if (error) {
+        status.textContent = 'Logout failed: ' + error.message
+        return
+      }
+
+      window.location.href = './login.html'
+    })
+
+    loadPage()
+  </script>
+</body>
+</html>

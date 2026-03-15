@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 520px;
+      margin: 40px auto;
+      padding: 0 16px;
+      line-height: 1.5;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: grid;
+      gap: 12px;
+    }
+
+    input, button {
+      padding: 10px 12px;
+      font-size: 16px;
+    }
+
+    #result {
+      margin-top: 16px;
+      white-space: pre-wrap;
+    }
+
+    .links {
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Create account</h1>
+
+  <form id="registerForm">
+    <input id="username" placeholder="username" minlength="3" maxlength="24" required />
+    <input id="email" type="email" placeholder="email" required />
+    <input id="password" type="password" placeholder="password" minlength="8" required />
+    <button type="submit">Register</button>
+  </form>
+
+  <div id="result"></div>
+
+  <div class="links">
+    <a href="./login.html">Already have an account? Log in</a>
+  </div>
+
+  <script type="module">
+    import { supabase } from './js/supabase-client.js'
+
+    const form = document.getElementById('registerForm')
+    const result = document.getElementById('result')
+
+    function isValidUsername(username) {
+      return /^[A-Za-z0-9_]{3,24}$/.test(username)
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault()
+
+      const username = document.getElementById('username').value.trim()
+      const email = document.getElementById('email').value.trim()
+      const password = document.getElementById('password').value
+
+      if (!isValidUsername(username)) {
+        result.textContent = 'Username must be 3 to 24 characters and only use letters, numbers, or underscores.'
+        return
+      }
+
+      result.textContent = 'Checking username...'
+
+      const { data: existingUsernames, error: usernameCheckError } = await supabase
+        .from('profiles')
+        .select('id, username')
+        .ilike('username', username)
+
+      if (usernameCheckError) {
+        result.textContent = 'Failed to check username: ' + usernameCheckError.message
+        return
+      }
+
+      if (existingUsernames && existingUsernames.length > 0) {
+        result.textContent = 'That username is already taken.'
+        return
+      }
+
+      result.textContent = 'Creating account...'
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth-callback.html`,
+          data: {
+            username
+          }
+        }
+      })
+
+      if (error) {
+        result.textContent = 'Signup failed: ' + error.message
+        return
+      }
+
+      result.textContent =
+        'Account created.\n\n' +
+        'User ID: ' + (data.user?.id ?? 'not returned') + '\n' +
+        'Email: ' + email + '\n\n' +
+        'If email confirmation is enabled, go confirm your email first, then come back and log in.'
+    })
+  </script>
+</body>
+</html>
