@@ -64,7 +64,9 @@ async function initEditPostPage() {
 function fillForm(post) {
   titleEl.value = post.title ?? '';
   contentEl.value = post.content ?? '';
-  countryCodeEl.value = post.country_code ?? '';
+  // Country code is auto-detected by server, so we just disable it
+  countryCodeEl.value = '';
+  countryCodeEl.disabled = true;
 }
 
 formEl.addEventListener('submit', async (event) => {
@@ -77,16 +79,9 @@ formEl.addEventListener('submit', async (event) => {
 
   const title = titleEl.value.trim();
   const content = contentEl.value.trim();
-  const countryCodeRaw = countryCodeEl.value.trim().toUpperCase();
-  const countryCode = countryCodeRaw === '' ? null : countryCodeRaw;
 
   if (!title || !content) {
     statusEl.textContent = 'Title and content are required.';
-    return;
-  }
-
-  if (countryCode && !/^[A-Z]{2}$/.test(countryCode)) {
-    statusEl.textContent = 'Country code must be 2 uppercase letters, like US or CA.';
     return;
   }
 
@@ -97,8 +92,7 @@ formEl.addEventListener('submit', async (event) => {
     .from('posts')
     .update({
       title,
-      content,
-      country_code: countryCode
+      content
     })
     .eq('id', currentPost.id);
 

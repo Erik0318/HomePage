@@ -1,156 +1,250 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Account</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260306" />
-  <style>
-    .auth-nav {
-      font-size: 0.7rem;
-      gap: var(--space-3);
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Account</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260306" />
+    <style>
+      .auth-nav {
+        font-size: 0.7rem;
+        gap: var(--space-3);
+      }
 
-    .card {
-      border: 1px solid var(--border);
-      padding: var(--space-4);
-      margin-top: var(--space-4);
-      background: var(--surface);
-      border-radius: var(--radius);
-    }
+      .card {
+        border: 1px solid var(--border);
+        padding: var(--space-4);
+        margin-top: var(--space-4);
+        background: var(--surface);
+        border-radius: var(--radius);
+      }
 
-    .row {
-      margin-bottom: 10px;
-      word-break: break-word;
-      color: var(--text);
-    }
+      .row {
+        margin-bottom: 10px;
+        word-break: break-word;
+        color: var(--text);
+      }
 
-    .row strong {
-      color: var(--accent);
-    }
+      .row strong {
+        color: var(--accent);
+      }
 
-    button, a.button-link {
-      display: inline-block;
-      padding: 10px 12px;
-      font-size: 13px;
-      margin-top: 12px;
-      text-decoration: none;
-      color: var(--text);
-      border: 1px solid var(--border);
-      background: var(--surface);
-      cursor: pointer;
-      border-radius: var(--radius);
-      text-transform: uppercase;
-      font-family: var(--mono);
-    }
+      button,
+      a.button-link {
+        display: inline-block;
+        padding: 10px 12px;
+        font-size: 13px;
+        margin-top: 12px;
+        text-decoration: none;
+        color: var(--text);
+        border: 1px solid var(--border);
+        background: var(--surface);
+        cursor: pointer;
+        border-radius: var(--radius);
+        text-transform: uppercase;
+        font-family: var(--mono);
+      }
 
-    button:hover,
-    button:focus-visible,
-    a.button-link:hover,
-    a.button-link:focus-visible {
-      border-color: var(--accent);
-    }
+      button:hover,
+      button:focus-visible,
+      a.button-link:hover,
+      a.button-link:focus-visible {
+        border-color: var(--accent);
+      }
 
-    #status {
-      white-space: pre-wrap;
-      margin-top: 16px;
-      color: var(--muted);
-    }
-  </style>
-</head>
-<body data-page="account">
-  <div class="site-vignette" aria-hidden="true"></div>
-  <div class="custom-cursor" id="customCursor"></div>
-  <div class="particles-container" id="particlesContainer"></div>
-  <header class="site-header">
-    <nav class="top-nav" aria-label="Primary">
-      <a class="wordmark" href="index.html">ERIKDEV.CC</a>
-      <div class="nav-links auth-nav">
-        <div id="auth-links"></div>
+      #status {
+        white-space: pre-wrap;
+        margin-top: 16px;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body data-page="account">
+    <div class="site-vignette" aria-hidden="true"></div>
+    <div class="custom-cursor" id="customCursor"></div>
+    <div class="particles-container" id="particlesContainer"></div>
+    <header class="site-header">
+      <nav class="top-nav" aria-label="Primary">
+        <a class="wordmark" href="index.html">ERIKDEV.CC</a>
+        <div class="nav-links auth-nav">
+          <a href="index.html">Home</a>
+          <a href="projects.html">Projects</a>
+          <a href="about.html">About me</a>
+          <a href="blogs.html">Blogs</a>
+          <a href="things.html">Things I love &amp; hate</a>
+          <a href="albums.html">Albums</a>
+          <div style="border-left: 1px solid var(--muted); margin: 0 var(--space-3); height: auto;"></div>
+          <div id="auth-links" style="font-size: 0.65rem;"></div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="page-wrap">
+      <h1 class="page-title">My Account</h1>
+
+      <div id="status">Loading...</div>
+
+      <div id="accountCard" class="card" style="display: none">
+        <div class="row"><strong>Email:</strong> <span id="email"></span></div>
+        <div class="row">
+          <strong>Username:</strong> <span id="username"></span>
+        </div>
+        <div class="row">
+          <strong>User ID:</strong> <span id="userId"></span>
+        </div>
+        <div class="row">
+          <strong>Created at:</strong> <span id="createdAt"></span>
+        </div>
+
+        <hr
+          style="margin: 16px 0; border: 0; border-top: 1px solid var(--border)"
+        />
+
+        <div class="row">
+          <strong>Game:</strong> <span id="gameName">A Game</span>
+        </div>
+        <div class="row">
+          <strong>Best time:</strong> <span id="bestTime">Loading...</span>
+        </div>
+        <div class="row">
+          <strong>Current rank:</strong>
+          <span id="currentRank">Loading...</span>
+        </div>
+        <div class="row">
+          <strong>Status:</strong>
+          <span id="leaderboardStatus">Loading...</span>
+        </div>
+
+        <a class="button-link" href="./leaderboards.html?game=agame">View leaderboard</a>
+        <br />
+        <button id="logoutBtn">Log out</button>
       </div>
-    </nav>
-  </header>
+    </main>
 
-  <main class="page-wrap">
-    <h1 class="page-title">My Account</h1>
+    <script src="main.js?v=20260306"></script>
+    <script type="module">
+      import { initTopbar } from "./js/topbar.js";
+      import { supabase } from "./js/supabase-client.js";
 
-    <div id="status">Loading...</div>
+      initTopbar();
 
-    <div id="accountCard" class="card" style="display:none;">
-      <div class="row"><strong>Email:</strong> <span id="email"></span></div>
-      <div class="row"><strong>Username:</strong> <span id="username"></span></div>
-      <div class="row"><strong>User ID:</strong> <span id="userId"></span></div>
-      <div class="row"><strong>Created at:</strong> <span id="createdAt"></span></div>
+      const status = document.getElementById("status");
+      const accountCard = document.getElementById("accountCard");
+      const emailEl = document.getElementById("email");
+      const usernameEl = document.getElementById("username");
+      const userIdEl = document.getElementById("userId");
+      const createdAtEl = document.getElementById("createdAt");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const gameNameEl = document.getElementById("gameName");
 
-      <button id="logoutBtn">Log out</button>
-    </div>
-  </main>
+      const bestTimeEl = document.getElementById("bestTime");
+      const currentRankEl = document.getElementById("currentRank");
+      const leaderboardStatusEl = document.getElementById("leaderboardStatus");
 
-  <script src="main.js?v=20260306"></script>
-  <script type="module">
-    import { initTopbar } from "./js/topbar.js";
-    import { supabase } from './js/supabase-client.js'
+      const GAME_SLUG = "agame";
+      const MODE = "default";
 
-    initTopbar();
+      function formatDuration(ms) {
+        if (ms == null || Number.isNaN(Number(ms))) return "-";
 
-    const status = document.getElementById('status')
-    const accountCard = document.getElementById('accountCard')
-    const emailEl = document.getElementById('email')
-    const usernameEl = document.getElementById('username')
-    const userIdEl = document.getElementById('userId')
-    const createdAtEl = document.getElementById('createdAt')
-    const logoutBtn = document.getElementById('logoutBtn')
+        const totalMs = Number(ms);
+        const minutes = Math.floor(totalMs / 60000);
+        const seconds = Math.floor((totalMs % 60000) / 1000);
+        const milliseconds = totalMs % 1000;
 
-    async function loadPage() {
-      const { data: userData, error: userError } = await supabase.auth.getUser()
-
-      if (userError) {
-        status.textContent = 'Failed to read auth state: ' + userError.message
-        return
+        return `${minutes}:${String(seconds).padStart(2, "0")}.${String(milliseconds).padStart(3, "0")}`;
       }
 
-      const user = userData.user
+      async function loadLeaderboardSummary() {
+        if (!bestTimeEl || !currentRankEl || !leaderboardStatusEl) return;
 
-      if (!user) {
-        window.location.href = './login.html'
-        return
+        const { data, error } = await supabase.rpc("get_my_best_run", {
+          p_game_slug: GAME_SLUG,
+          p_mode: MODE,
+        });
+
+        if (error) {
+          if (gameNameEl) gameNameEl.textContent = "A Game";
+          bestTimeEl.textContent = "Failed to load";
+          currentRankEl.textContent = "Failed to load";
+          leaderboardStatusEl.textContent = "Leaderboard unavailable";
+          return;
+        }
+
+        const row = data?.[0];
+
+        if (!row) {
+          if (gameNameEl) gameNameEl.textContent = "A Game";
+          bestTimeEl.textContent = "No record yet";
+          currentRankEl.textContent = "-";
+          leaderboardStatusEl.textContent = "No score submitted yet";
+          return;
+        }
+
+        gameNameEl.textContent = row.game_name ?? "A Game";
+        bestTimeEl.textContent = formatDuration(row.best_duration_ms);
+        currentRankEl.textContent = `#${row.current_rank} of ${row.total_players}`;
+        leaderboardStatusEl.textContent = "Score submitted";
       }
 
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('id, username, created_at')
-        .eq('id', user.id)
-        .single()
+      async function loadPage() {
+        const { data: userData, error: userError } =
+          await supabase.auth.getUser();
 
-      if (profileError) {
-        status.textContent = 'Logged in, but failed to load profile: ' + profileError.message
-        return
+        if (userError) {
+          status.textContent =
+            "Failed to read auth state: " + userError.message;
+          return;
+        }
+
+        const user = userData.user;
+
+        if (!user) {
+          window.location.href = "./login.html";
+          return;
+        }
+
+        const { data: profile, error: profileError } = await supabase
+          .from("profiles")
+          .select("id, username, created_at")
+          .eq("id", user.id)
+          .single();
+
+        if (profileError) {
+          status.textContent =
+            "Logged in, but failed to load profile: " + profileError.message;
+          return;
+        }
+
+        status.textContent = "You are logged in.";
+        accountCard.style.display = "block";
+
+        emailEl.textContent = user.email ?? "";
+        usernameEl.textContent = profile.username ?? "";
+        userIdEl.textContent = user.id ?? "";
+        createdAtEl.textContent = profile.created_at ?? "";
+
+        await loadLeaderboardSummary();
       }
 
-      status.textContent = 'You are logged in.'
-      accountCard.style.display = 'block'
+      logoutBtn.addEventListener("click", async () => {
+        const { error } = await supabase.auth.signOut();
 
-      emailEl.textContent = user.email ?? ''
-      usernameEl.textContent = profile.username ?? ''
-      userIdEl.textContent = user.id ?? ''
-      createdAtEl.textContent = profile.created_at ?? ''
-    }
+        if (error) {
+          status.textContent = "Logout failed: " + error.message;
+          return;
+        }
 
-    logoutBtn.addEventListener('click', async () => {
-      const { error } = await supabase.auth.signOut()
+        window.location.href = "./login.html";
+      });
 
-      if (error) {
-        status.textContent = 'Logout failed: ' + error.message
-        return
-      }
-
-      window.location.href = './login.html'
-    })
-
-    loadPage()
-  </script>
-</body>
+      loadPage();
+    </script>
+  </body>
 </html>

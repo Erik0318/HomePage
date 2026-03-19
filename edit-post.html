@@ -3,85 +3,165 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Edit Post</title>
+  <title>ERIKDEV.CC — Edit Post</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=20260306" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 0 16px;
-      line-height: 1.6;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-    }
-
-    .topbar a {
-      text-decoration: none;
-      color: blue;
-    }
-
+    /* Form-specific styles */
     form {
       display: grid;
-      gap: 12px;
-      margin-top: 20px;
+      gap: var(--space-4);
+      margin-top: var(--space-5);
     }
 
-    input, textarea, button {
-      font: inherit;
-      padding: 10px;
+    .form-group {
+      display: grid;
+      gap: var(--space-2);
+    }
+
+    label {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    input[type="text"],
+    textarea {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: var(--space-3);
+      font-family: var(--body);
+      font-size: 0.95rem;
+      border-radius: var(--radius);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: inset 0 0 0 2px rgba(176, 137, 91, 0.1);
+    }
+
+    input[type="text"]::placeholder,
+    textarea::placeholder {
+      color: var(--muted);
     }
 
     textarea {
-      min-height: 180px;
+      min-height: 200px;
       resize: vertical;
+      font-family: var(--mono);
+      font-size: 0.9rem;
     }
 
-    .hidden {
-      display: none;
+    #submit-btn {
+      align-self: start;
+      cursor: pointer;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.7rem 1rem;
+      border-radius: var(--radius);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+
+    #submit-btn:hover,
+    #submit-btn:focus-visible {
+      border-color: var(--accent);
+      color: var(--text);
     }
 
     #status {
-      margin: 16px 0;
-      color: #444;
+      margin: var(--space-4) 0;
+      padding: var(--space-3);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Disabled country code input */
+    input[type="text"]:disabled {
+      background: var(--bg-soft);
+      opacity: 0.7;
+      cursor: not-allowed;
     }
   </style>
 </head>
-<body>
-  <div class="topbar">
-    <h1>Edit Post</h1>
-    <div>
-      <a href="./forum.html">Forum</a>
-      |
-      <a href="./me.html">My Account</a>
-    </div>
-  </div>
+<body data-page="edit-post">
+  <div class="site-vignette" aria-hidden="true"></div>
+  <div class="custom-cursor" id="customCursor"></div>
+  <div class="particles-container" id="particlesContainer"></div>
 
-  <div id="status">Loading post...</div>
+  <header class="site-header">
+    <nav class="top-nav" aria-label="Primary">
+      <a class="wordmark" href="index.html">ERIKDEV.CC</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="about.html">About me</a>
+        <a href="blogs.html">Blogs</a>
+        <a href="things.html">Things I love &amp; hate</a>
+        <a href="albums.html">Albums</a>
+        <div style="border-left: 1px solid var(--muted); margin: 0 var(--space-3); height: auto;"></div>
+        <div id="auth-links" style="font-size: 0.65rem;"></div>
+      </div>
+    </nav>
+  </header>
 
-  <form id="edit-post-form" class="hidden">
-    <label>
-      Title
-      <input id="title" type="text" maxlength="120" required />
-    </label>
+  <main class="page-wrap">
+    <h1 class="page-title">Edit Post</h1>
+    <p class="page-intro">Update your post content.</p>
 
-    <label>
-      Content
-      <textarea id="content" maxlength="10000" required></textarea>
-    </label>
+    <div id="status">Loading post...</div>
 
-    <label>
-      Country code (optional)
-      <input id="country_code" type="text" maxlength="2" placeholder="US" />
-    </label>
+    <form id="edit-post-form" class="hidden">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input id="title" type="text" maxlength="120" placeholder="Post title" required />
+      </div>
 
-    <button id="submit-btn" type="submit">Save Changes</button>
-  </form>
+      <div class="form-group">
+        <label for="content">Content</label>
+        <textarea id="content" maxlength="10000" placeholder="Write your post..." required></textarea>
+      </div>
 
+      <div class="form-group">
+        <label for="country_code">Country code</label>
+        <input id="country_code" type="text" maxlength="2" placeholder="Auto detected by server" disabled />
+      </div>
+
+      <button id="submit-btn" type="submit">Save Changes</button>
+    </form>
+  </main>
+
+  <footer class="footer-edge">
+    <div class="footer-content">Edit with care.</div>
+  </footer>
+
+  <script src="main.js?v=20260306"></script>
+  <script type="module">
+    import { initTopbar } from "./js/topbar.js";
+    initTopbar();
+  </script>
   <script type="module" src="./js/edit-post.js"></script>
 </body>
 </html>

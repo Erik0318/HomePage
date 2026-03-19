@@ -4,7 +4,6 @@ const statusEl = document.getElementById("status");
 const postActionsEl = document.getElementById("post-actions");
 const postContainerEl = document.getElementById("post-container");
 const postVoteBarEl = document.createElement("div");
-postVoteBarEl.style.margin = "16px 0";
 postContainerEl.insertAdjacentElement("afterend", postVoteBarEl);
 
 const commentFormStatusEl = document.getElementById("comment-form-status");
@@ -79,18 +78,21 @@ function renderPost(post, username) {
   statusEl.textContent = "";
 
   const createdAt = new Date(post.created_at).toLocaleString();
-  const countryLabel = post.country_code
-    ? ` | Country: ${escapeHtml(post.country_code)}`
+  const countryMeta = post.country_code
+    ? `<span class="post-meta-sep">·</span><span>${escapeHtml(post.country_code)}</span>`
     : "";
 
   postContainerEl.innerHTML = `
-    <article class="post-card">
-      <h1>${escapeHtml(post.title)}</h1>
-      <div class="meta">
-        By ${escapeHtml(username)} | ${escapeHtml(createdAt)}${countryLabel}
+    <div class="post-article">
+      <h1 class="post-title">${escapeHtml(post.title)}</h1>
+      <div class="post-meta-row">
+        <span>${escapeHtml(username)}</span>
+        <span class="post-meta-sep">·</span>
+        <time>${escapeHtml(createdAt)}</time>
+        ${countryMeta}
       </div>
-      <div class="content">${escapeHtml(post.content)}</div>
-    </article>
+      <div class="post-body">${escapeHtml(post.content)}</div>
+    </div>
   `;
 }
 
@@ -108,14 +110,12 @@ function renderActions() {
   const editLink = document.createElement("a");
   editLink.textContent = "Edit Post";
   editLink.href = `./edit-post.html?id=${encodeURIComponent(currentPost.id)}`;
-  editLink.style.display = "inline-block";
-  editLink.style.marginRight = "12px";
-  editLink.style.marginBottom = "16px";
+  editLink.className = "action-btn";
 
   const deleteBtn = document.createElement("button");
   deleteBtn.textContent = "Delete Post";
   deleteBtn.type = "button";
-  deleteBtn.style.marginBottom = "16px";
+  deleteBtn.className = "action-btn";
   deleteBtn.addEventListener("click", handleDeletePost);
 
   postActionsEl.appendChild(editLink);
@@ -149,25 +149,24 @@ async function loadPostVotes(postId) {
 }
 
 function renderPostVoteBar(score, currentUserVote) {
-  const voteText =
-    currentUserVote === 1
-      ? "Your vote: upvote"
-      : currentUserVote === -1
-        ? "Your vote: downvote"
-        : "Your vote: none";
+  const scoreClass = score > 0 ? "positive" : score < 0 ? "negative" : "";
+  const loginHint = currentUser
+    ? ""
+    : `<span class="vote-login-hint">Log in to vote</span>`;
 
-  const loginHint = currentUser ? "" : " | Log in to vote";
+  const thumbsUpSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thumbs-up"><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/><path d="M7 10v12"/></svg>`;
+  const thumbsDownSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thumbs-down"><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"/><path d="M17 14V2"/></svg>`;
 
+  postVoteBarEl.className = "vote-bar";
   postVoteBarEl.innerHTML = `
-    <div class="meta">Score: ${score} | ${voteText}${loginHint}</div>
-    <div style="margin-top: 8px;">
-      <button type="button" data-post-vote="up">
-        ${currentUserVote === 1 ? "Remove upvote" : "Upvote"}
-      </button>
-      <button type="button" data-post-vote="down" style="margin-left: 8px;">
-        ${currentUserVote === -1 ? "Remove downvote" : "Downvote"}
-      </button>
-    </div>
+    <button type="button" class="vote-button${currentUserVote === 1 ? " active" : ""}" data-post-vote="up" aria-pressed="${currentUserVote === 1}" title="${currentUserVote === 1 ? "Remove upvote" : "Upvote"}">
+      ${thumbsUpSvg}
+    </button>
+    <span class="vote-count ${scoreClass}">${score}</span>
+    <button type="button" class="vote-button${currentUserVote === -1 ? " active" : ""}" data-post-vote="down" aria-pressed="${currentUserVote === -1}" title="${currentUserVote === -1 ? "Remove downvote" : "Downvote"}">
+      ${thumbsDownSvg}
+    </button>
+    ${loginHint}
   `;
 
   const upvoteBtn = postVoteBarEl.querySelector('[data-post-vote="up"]');
@@ -409,23 +408,30 @@ function renderComments(comments, profileMap, commentVoteMap) {
   commentsStatusEl.textContent = "";
   commentsListEl.innerHTML = "";
 
+  const thumbsUpSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thumbs-up"><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/><path d="M7 10v12"/></svg>`;
+  const thumbsDownSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-thumbs-down"><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"/><path d="M17 14V2"/></svg>`;
+
+  let commentIdx = 0;
   for (const comment of comments) {
     const item = document.createElement("article");
-    item.className = "post-card";
-    item.style.marginBottom = "12px";
+    item.className = "comment-card";
+    item.style.animationDelay = `${commentIdx * 60}ms`;
+    commentIdx++;
 
     const username = profileMap[comment.author_id] || "Unknown user";
     const createdAt = new Date(comment.created_at).toLocaleString();
-    const countryLabel = comment.country_code
-      ? ` | Country: ${escapeHtml(comment.country_code)}`
-      : "";
 
     const isEdited =
       comment.updated_at &&
       new Date(comment.updated_at).getTime() >
         new Date(comment.created_at).getTime();
 
-    const editedLabel = isEdited ? " (Edited)" : "";
+    const countryTag = comment.country_code
+      ? `<span class="comment-date">${escapeHtml(comment.country_code)}</span>`
+      : "";
+    const editedTag = isEdited
+      ? `<span class="comment-edited-tag">edited</span>`
+      : "";
 
     const voteInfo = commentVoteMap[comment.id] || {
       score: 0,
@@ -433,35 +439,50 @@ function renderComments(comments, profileMap, commentVoteMap) {
     };
     const currentUserVote = voteInfo.currentUserVote || 0;
 
-    const voteText =
-      currentUserVote === 1
-        ? "Your vote: upvote"
-        : currentUserVote === -1
-          ? "Your vote: downvote"
-          : "Your vote: none";
-
-    const loginHint = currentUser ? "" : " | Log in to vote";
-
     item.innerHTML = `
-      <div class="meta">By ${escapeHtml(username)} | ${escapeHtml(createdAt)}${countryLabel}${editedLabel}</div>
-      <div class="content">${escapeHtml(comment.content)}</div>
-      <div class="meta" style="margin-top: 8px;">
-        Score: ${voteInfo.score} | ${voteText}${loginHint}
+      <div class="comment-header">
+        <span class="comment-author">${escapeHtml(username)}</span>
+        <time class="comment-date">${escapeHtml(createdAt)}</time>
+        ${countryTag}
+        ${editedTag}
       </div>
+      <div class="comment-body">${escapeHtml(comment.content)}</div>
     `;
 
+    const commentFooter = document.createElement("div");
+    commentFooter.className = "comment-footer";
+
     const voteActions = document.createElement("div");
-    voteActions.style.marginTop = "8px";
+    voteActions.className = "vote-actions";
 
     const upvoteBtn = document.createElement("button");
     upvoteBtn.type = "button";
-    upvoteBtn.textContent = currentUserVote === 1 ? "Remove upvote" : "Upvote";
+    upvoteBtn.className = "vote-button";
+    upvoteBtn.innerHTML = thumbsUpSvg;
+    upvoteBtn.title = currentUserVote === 1 ? "Remove upvote" : "Upvote";
+
+    const voteCountSpan = document.createElement("span");
+    voteCountSpan.className = "comment-vote-count";
+    voteCountSpan.textContent = voteInfo.score;
 
     const downvoteBtn = document.createElement("button");
     downvoteBtn.type = "button";
-    downvoteBtn.textContent =
-      currentUserVote === -1 ? "Remove downvote" : "Downvote";
-    downvoteBtn.style.marginLeft = "8px";
+    downvoteBtn.className = "vote-button";
+    downvoteBtn.innerHTML = thumbsDownSvg;
+    downvoteBtn.title = currentUserVote === -1 ? "Remove downvote" : "Downvote";
+
+    if (currentUserVote === 1) {
+      upvoteBtn.classList.add("active");
+      upvoteBtn.setAttribute("aria-pressed", "true");
+      downvoteBtn.setAttribute("aria-pressed", "false");
+    } else if (currentUserVote === -1) {
+      downvoteBtn.classList.add("active");
+      downvoteBtn.setAttribute("aria-pressed", "true");
+      upvoteBtn.setAttribute("aria-pressed", "false");
+    } else {
+      upvoteBtn.setAttribute("aria-pressed", "false");
+      downvoteBtn.setAttribute("aria-pressed", "false");
+    }
 
     if (!currentUser) {
       upvoteBtn.disabled = true;
@@ -470,38 +491,40 @@ function renderComments(comments, profileMap, commentVoteMap) {
       upvoteBtn.addEventListener("click", () =>
         handleCommentVote(comment.id, 1, currentUserVote),
       );
-
       downvoteBtn.addEventListener("click", () =>
         handleCommentVote(comment.id, -1, currentUserVote),
       );
     }
 
     voteActions.appendChild(upvoteBtn);
+    voteActions.appendChild(voteCountSpan);
     voteActions.appendChild(downvoteBtn);
-    item.appendChild(voteActions);
+    commentFooter.appendChild(voteActions);
 
     if (currentUser && currentUser.id === comment.author_id) {
       const actions = document.createElement("div");
-      actions.style.marginTop = "8px";
+      actions.className = "comment-actions";
 
       const editBtn = document.createElement("button");
       editBtn.type = "button";
-      editBtn.textContent = "Edit Comment";
-      editBtn.style.marginRight = "8px";
+      editBtn.className = "action-btn";
+      editBtn.textContent = "Edit";
       editBtn.addEventListener("click", () => handleEditComment(comment));
 
       const deleteBtn = document.createElement("button");
       deleteBtn.type = "button";
-      deleteBtn.textContent = "Delete Comment";
+      deleteBtn.className = "action-btn";
+      deleteBtn.textContent = "Delete";
       deleteBtn.addEventListener("click", () =>
         handleDeleteComment(comment.id),
       );
 
       actions.appendChild(editBtn);
       actions.appendChild(deleteBtn);
-      item.appendChild(actions);
+      commentFooter.appendChild(actions);
     }
 
+    item.appendChild(commentFooter);
     commentsListEl.appendChild(item);
   }
 }

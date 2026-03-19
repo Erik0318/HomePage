@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A Game Leaderboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260306" />
+    <style>
+      .auth-nav {
+        font-size: 0.7rem;
+        gap: var(--space-3);
+      }
+
+      .card {
+        border: 1px solid var(--border);
+        padding: var(--space-4);
+        margin-top: var(--space-4);
+        background: var(--surface);
+        border-radius: var(--radius);
+      }
+
+      .row {
+        margin-bottom: 10px;
+        word-break: break-word;
+        color: var(--text);
+      }
+
+      .row strong {
+        color: var(--accent);
+      }
+
+      button {
+        display: inline-block;
+        padding: 10px 12px;
+        font-size: 13px;
+        margin-top: 12px;
+        text-decoration: none;
+        color: var(--text);
+        border: 1px solid var(--border);
+        background: var(--surface);
+        cursor: pointer;
+        border-radius: var(--radius);
+        text-transform: uppercase;
+        font-family: var(--mono);
+      }
+
+      button:hover,
+      button:focus-visible {
+        border-color: var(--accent);
+      }
+
+      #status {
+        white-space: pre-wrap;
+        margin-top: 16px;
+        color: var(--muted);
+      }
+
+      .table-wrap {
+        margin-top: 18px;
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: var(--mono);
+        font-size: 0.92rem;
+      }
+
+      th,
+      td {
+        padding: 12px 10px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+
+      th {
+        color: var(--accent);
+        font-weight: 500;
+      }
+
+      tbody tr:hover {
+        background: rgba(255, 255, 255, 0.03);
+      }
+    </style>
+  </head>
+  <body data-page="leaderboard">
+    <div class="site-vignette" aria-hidden="true"></div>
+    <div class="custom-cursor" id="customCursor"></div>
+    <div class="particles-container" id="particlesContainer"></div>
+
+    <header class="site-header">
+      <nav class="top-nav" aria-label="Primary">
+        <a class="wordmark" href="index.html">ERIKDEV.CC</a>
+        <div class="nav-links auth-nav">
+          <a href="index.html">Home</a>
+          <a href="projects.html">Projects</a>
+          <a href="about.html">About me</a>
+          <a href="blogs.html">Blogs</a>
+          <a href="things.html">Things I love &amp; hate</a>
+          <a href="albums.html">Albums</a>
+          <div style="border-left: 1px solid var(--muted); margin: 0 var(--space-3); height: auto;"></div>
+          <div id="auth-links" style="font-size: 0.65rem;"></div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="page-wrap">
+      <h1 class="page-title" id="page-title">A Game Leaderboard (Not finished yet. Any data is just for demonstration)</h1>
+
+      <div class="card">
+        <div class="row">
+          <strong>Game:</strong> <span id="game-label">A Game</span>
+        </div>
+        <div class="row">
+          <strong>Rule:</strong> Fastest completion time wins.
+        </div>
+
+        <div id="status">Loading leaderboard...</div>
+
+        <button id="refresh-btn" type="button">Refresh</button>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Player</th>
+                <th>Time</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-body">
+              <tr>
+                <td colspan="4">Loading...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <script src="main.js?v=20260306"></script>
+    <script type="module">
+      import { initTopbar } from "./js/topbar.js";
+      initTopbar();
+    </script>
+    <script type="module" src="./js/leaderboards.js"></script>
+  </body>
+</html>
