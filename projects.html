@@ -1,64 +1,124 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ERIKDEV.CC — Projects</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260306" />
-</head>
-<body data-page="projects">
-  <div class="site-vignette" aria-hidden="true"></div>
-  <div class="custom-cursor" id="customCursor"></div>
-  <div class="particles-container" id="particlesContainer"></div>
-  <header class="site-header">
-    <nav class="top-nav" aria-label="Primary">
-      <a class="wordmark" href="index.html">ERIKDEV.CC</a>
-      <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="projects.html" aria-current="page">Projects</a>
-        <a href="about.html">About me</a>
-        <a href="blogs.html">Blogs</a>
-        <a href="things.html">Things I love &amp; hate</a>
-        <a href="albums.html">Albums</a>
-        <div style="border-left: 1px solid var(--muted); margin: 0 var(--space-3); height: auto;"></div>
-        <div id="auth-links" style="font-size: 0.65rem;"></div>
-      </div>
-    </nav>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ERIKDEV.CC — Projects</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260306" />
+  </head>
+  <body data-page="projects">
+    <div class="site-vignette" aria-hidden="true"></div>
+    <div class="custom-cursor" id="customCursor"></div>
+    <div class="particles-container" id="particlesContainer"></div>
+    <header class="site-header">
+      <nav class="top-nav" aria-label="Primary">
+        <a class="wordmark" href="index.html">ERIKDEV.CC</a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="projects.html" aria-current="page">Projects</a>
+          <a href="about.html">About me</a>
+          <a href="blogs.html">Blogs</a>
+          <a href="things.html">Things I love &amp; hate</a>
+          <a href="albums.html">Albums</a>
+          <div
+            style="
+              border-left: 1px solid var(--muted);
+              margin: 0 var(--space-3);
+              height: auto;
+            "
+          ></div>
+          <div id="auth-links" style="font-size: 0.65rem"></div>
+        </div>
+      </nav>
+    </header>
 
-  <main class="page-wrap">
-    <h1 class="page-title">Projects</h1>
-    <p class="page-intro">Exhibition wall.</p>
-    <section class="card-grid" aria-label="Project cards">
-      <a class="card-link" href="https://filmstats.erikdev.cc" target="_blank" rel="noopener noreferrer">
-        <article class="card">
-          <h2 class="card-title">Filmstats</h2>
-          <p class="card-text">So far it only supports letterboxd. More platforms coming soon.</p>
-        </article>
-      </a>
-      <a class="card-link" href="https://agame.erikdev.cc" target="_blank" rel="noopener noreferrer">
-        <article class="card">
-          <h2 class="card-title">A Game</h2>
-          <p class="card-text">A small and hard game made in Godot. Thanks to Brackeys' tutorial.</p>
-        </article>
-      </a>
-      <a class="card-link" href="about.html">
-        <article class="card">
-          <h2 class="card-title">More Projects</h2>
-          <p class="card-text">Erik is too lazy to list them all here. PLZ wait for the full list!</p>
-        </article>
-      </a>
-    </section>
-  </main>
+    <main class="page-wrap">
+      <h1 class="page-title">Projects</h1>
+      <p class="page-intro">Exhibition wall.</p>
+      <section class="card-grid" aria-label="Project cards">
+        <a
+          class="card-link"
+          href="https://filmstats.erikdev.cc"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <article class="card">
+            <h2 class="card-title">Filmstats</h2>
+            <p class="card-text">
+              So far it only supports letterboxd. More platforms coming soon.
+            </p>
+          </article>
+        </a>
+        <a
+          class="card-link"
+          id="agame-link"
+          href="https://agame.erikdev.cc"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <article class="card">
+            <h2 class="card-title">A Game</h2>
+            <p class="card-text">
+              A small and hard game made in Godot. Thanks to Brackeys' tutorial.
+            </p>
+          </article>
+        </a>
+        <a class="card-link" href="about.html">
+          <article class="card">
+            <h2 class="card-title">More Projects</h2>
+            <p class="card-text">
+              Erik is too lazy to list them all here. PLZ wait for the full
+              list!
+            </p>
+          </article>
+        </a>
+      </section>
+    </main>
 
-  <footer class="footer-edge">I'm more than these!</footer>
-  <script src="main.js?v=20260306"></script>
-  <script type="module">
-    import { initTopbar } from "./js/topbar.js";
-    initTopbar();
-  </script>
-</body>
+    <footer class="footer-edge">I'm more than these!</footer>
+    <script src="main.js?v=20260306"></script>
+    <script type="module">
+      import { initTopbar } from "./js/topbar.js";
+      import { supabase } from "./js/supabase-client.js";
+
+      initTopbar();
+
+      const agameLink = document.getElementById("agame-link");
+
+      if (agameLink) {
+        agameLink.addEventListener("click", async (e) => {
+          e.preventDefault();
+
+          const baseUrl = "https://agame.erikdev.cc/";
+          let targetUrl = baseUrl;
+
+          try {
+            const {
+              data: { session },
+            } = await supabase.auth.getSession();
+
+            if (session?.access_token && session?.refresh_token) {
+              const hash = new URLSearchParams({
+                access_token: session.access_token,
+                refresh_token: session.refresh_token,
+                source: "erikdev",
+              });
+
+              targetUrl = `${baseUrl}#${hash.toString()}`;
+            }
+          } catch (err) {
+            console.error("Failed to read session for agame handoff:", err);
+          }
+
+          window.open(targetUrl, "_blank", "noopener,noreferrer");
+        });
+      }
+    </script>
+  </body>
 </html>
