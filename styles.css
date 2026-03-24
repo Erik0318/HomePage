@@ -399,6 +399,26 @@ a {
   border-bottom: 1px solid var(--border);
 }
 
+/* For the Things page: improved hover reveal for the descriptive subline.
+   Default: collapsed. On hover/focus it smoothly reveals to full height
+   with a subtle slide and fade for a more polished animation. */
+body[data-page="things"] .subline {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transform: translateY(-6px);
+  transition: opacity 240ms cubic-bezier(.2,.9,.2,1),
+              max-height 360ms cubic-bezier(.2,.9,.2,1),
+              transform 260ms cubic-bezier(.2,.9,.2,1);
+  will-change: opacity, transform, max-height;
+}
+
+body[data-page="things"] .line-list li:hover .subline,
+body[data-page="things"] .line-list li:focus-within .subline {
+  opacity: 1;
+  max-height: 600px; /* large enough for long descriptions */
+  transform: translateY(0);
+}
 .subline {
   display: block;
   margin-top: 0.2rem;
