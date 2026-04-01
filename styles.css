@@ -272,6 +272,136 @@ a {
 }
 
 /* =====================
+   Page: Projects
+===================== */
+.project-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--border);
+}
+
+.project-list li {
+  border-bottom: 1px solid var(--border);
+}
+
+.project-row {
+  display: grid;
+  grid-template-columns: 2.5rem 11rem 6.5rem 1fr 1.5rem;
+  align-items: center;
+  column-gap: var(--space-5);
+  padding: var(--space-4) 0;
+  text-decoration: none;
+  color: var(--text);
+  transition: color 150ms ease;
+}
+
+.project-row:hover,
+.project-row:focus-visible {
+  color: var(--accent);
+}
+
+.project-idx {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+.project-name {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.project-tag {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  padding: 0.18rem 0.5rem;
+  border-radius: var(--radius);
+  white-space: nowrap;
+  justify-self: start;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+
+.project-row:hover .project-tag,
+.project-row:focus-visible .project-tag {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.project-desc {
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  transition: color 150ms ease;
+}
+
+.project-arrow {
+  font-family: var(--mono);
+  color: var(--muted);
+  justify-self: end;
+  transition: transform 150ms ease, color 150ms ease;
+}
+
+.project-row:hover .project-arrow,
+.project-row:focus-visible .project-arrow {
+  transform: translateX(3px);
+  color: var(--accent);
+}
+
+.project-item--more {
+  opacity: 0.45;
+}
+
+.project-item--more .project-name {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 680px) {
+  .project-row {
+    grid-template-columns: 2rem 1fr auto;
+    grid-template-rows: auto auto;
+    row-gap: var(--space-1);
+    column-gap: var(--space-3);
+  }
+
+  .project-idx {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    align-self: center;
+  }
+
+  .project-name {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .project-tag {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .project-desc {
+    grid-column: 2 / 4;
+    grid-row: 2;
+  }
+
+  .project-arrow {
+    display: none;
+  }
+}
+
+/* =====================
    Page: Home
 ===================== */
 .home-hero {
