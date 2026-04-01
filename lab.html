@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ERIKDEV.CC — Albums</title>
+  <title>ERIKDEV.CC — Lab</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css?v=20260306" />
 </head>
-<body data-page="albums">
+<body data-page="lab">
   <div class="site-vignette" aria-hidden="true"></div>
   <div class="custom-cursor" id="customCursor"></div>
   <div class="particles-container" id="particlesContainer"></div>
@@ -22,8 +22,8 @@
         <a href="about.html">About me</a>
         <a href="blogs.html">Blogs</a>
         <a href="things.html">Things</a>
-        <a href="albums.html" aria-current="page">Albums</a>
-        <a href="lab.html">Lab</a>
+        <a href="albums.html">Albums</a>
+        <a href="lab.html" aria-current="page">Lab</a>
         <div style="border-left: 1px solid var(--muted); margin: 0 var(--space-3); height: auto;"></div>
         <div id="auth-links" style="font-size: 0.65rem;"></div>
       </div>
@@ -31,25 +31,10 @@
   </header>
 
   <main class="page-wrap">
-    <h1 class="page-title">Albums</h1>
-    <p class="page-intro">Trying to be a better photographer. (MAYBE IT WOULD TAKE SOME TIME TO LOAD THE PICS!)</p>
-    <section class="album-grid" id="albumGrid" aria-label="Album thumbnails"></section>
+    <h1 class="page-title">Lab</h1>
+    <p class="page-intro">This page is currently under development. Check back soon!</p>
   </main>
 
-  <div class="lightbox" id="lightbox" aria-hidden="true">
-    <div class="lightbox-panel" role="dialog" aria-modal="true" aria-label="Image viewer">
-      <div class="lightbox-controls">
-        <button class="icon-button" id="prevBtn" aria-label="Previous image" type="button">Prev</button>
-        <button class="icon-button" id="closeBtn" aria-label="Close lightbox" type="button">Close</button>
-        <button class="icon-button" id="nextBtn" aria-label="Next image" type="button">Next</button>
-      </div>
-      <img id="lightboxImage" src="" alt="" />
-      <div class="lightbox-index" id="lightboxIndex"></div>
-      <p id="lightboxCaption"></p>
-    </div>
-  </div>
-
-  <footer class="footer-edge">Escape to close • Arrow keys to navigate</footer>
   <script src="main.js?v=20260306"></script>
   <script type="module">
     import { initTopbar } from "./js/topbar.js";
