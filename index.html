@@ -42,7 +42,7 @@
       </div>
       <section class="spotify-now-playing" aria-label="Spotify now playing">
         <a href="https://spotifystats.com/badge/536a27da3b29a3ac0a8c0314c1c02658056b8b56/open" aria-label="Open my current Spotify track">
-          <img src="https://spotifystats.com/badge/536a27da3b29a3ac0a8c0314c1c02658056b8b56.svg" alt="Now playing on Spotify" width="480" height="104" loading="lazy" decoding="async" />
+          <img id="spotifyNowPlayingBadge" src="https://spotifystats.com/badge/536a27da3b29a3ac0a8c0314c1c02658056b8b56.svg" alt="Now playing on Spotify" width="480" height="104" loading="lazy" decoding="async" />
         </a>
       </section>
     </section>
@@ -52,6 +52,34 @@
     <div class="footer-content">Yes. A short homepage.</div>
     <div class="footer-views" id="viewsDisplay">Total views: <span id="viewCount">0</span></div>
   </footer>
+  <script>
+    // Request a fresh SpotifyStats badge while the homepage is open.
+    (() => {
+      const badge = document.getElementById("spotifyNowPlayingBadge");
+      if (!badge) return;
+      const baseUrl = badge.getAttribute("src").split("?")[0];
+      let latestRequest = 0;
+
+      function refreshSpotifyBadge() {
+        if (document.visibilityState !== "visible") return;
+        const requestId = ++latestRequest;
+        const url = new URL(baseUrl, window.location.href);
+        url.searchParams.set("_refresh", String(Date.now()));
+        // Preload so a temporary error doesn't replace the working image.
+        const next = new Image();
+        next.onload = () => {
+          if (requestId === latestRequest) badge.src = next.src;
+        };
+        next.src = url.href;
+      }
+
+      refreshSpotifyBadge();
+      window.setInterval(refreshSpotifyBadge, 30000);
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") refreshSpotifyBadge();
+      });
+    })();
+  </script>
   <script src="main.js?v=20260306"></script>
   <script type="module">
     import { initTopbar } from "./js/topbar.js";
