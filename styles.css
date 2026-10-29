@@ -420,6 +420,33 @@ a {
   text-transform: uppercase;
 }
 
+.spotify-now-playing {
+  display: grid;
+  justify-items: start;
+  gap: 0.35rem;
+  width: min(480px, 100%);
+}
+
+.spotify-now-playing > a,
+.spotify-now-playing img {
+  display: block;
+  max-width: 100%;
+}
+
+.spotify-now-playing img {
+  height: auto;
+}
+
+.spotify-now-playing small {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.spotify-now-playing small a:hover {
+  color: var(--accent);
+}
+
 /* =====================
    Page: About + Blogs
 ===================== */
