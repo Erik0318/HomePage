@@ -1,0 +1,8 @@
+name = "erik-spotify-status"
+main = "worker.js"
+compatibility_date = "2026-10-28"
+
+# After running "npx wrangler kv namespace create SPOTIFY_STORAGE", add:
+# [[kv_namespaces]]
+# binding = "SPOTIFY_STORAGE"
+# id = "<id returned by Wrangler>"
