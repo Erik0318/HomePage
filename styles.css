@@ -420,6 +420,10 @@ a {
   text-transform: uppercase;
 }
 
+.spotify-now-playing[hidden] {
+  display: none;
+}
+
 .spotify-now-playing {
   display: grid;
   justify-items: start;
