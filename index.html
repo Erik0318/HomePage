@@ -42,7 +42,7 @@
       </div>
       <section class="spotify-now-playing" aria-label="Spotify now playing">
         <a href="https://spotifystats.com/badge/536a27da3b29a3ac0a8c0314c1c02658056b8b56/open" aria-label="Open my current Spotify track">
-          <img id="spotifyNowPlayingBadge" data-badge-url="https://spotifystats.com/badge/536a27da3b29a3ac0a8c0314c1c02658056b8b56.svg" alt="Now playing on Spotify" width="480" height="104" decoding="async" style="visibility: hidden; aspect-ratio: 480 / 104;" />
+          <img id="spotifyNowPlayingBadge" data-badge-url="https://spotifystats.com/badge/536a27da3b29a3ac0a8c0314c1c02658056b8b56.svg" data-status-url="" alt="Now playing on Spotify" width="480" height="104" decoding="async" style="visibility: hidden; aspect-ratio: 480 / 104;" />
         </a>
       </section>
     </section>
@@ -53,37 +53,61 @@
     <div class="footer-views" id="viewsDisplay">Total views: <span id="viewCount">0</span></div>
   </footer>
   <script>
-    // Request a fresh SpotifyStats badge while the homepage is open.
+    // Spotify playback detection is activated when data-status-url is configured.
+    // Until then, keep refreshing the public SpotifyStats image as before.
     (() => {
       const badge = document.getElementById("spotifyNowPlayingBadge");
       if (!badge) return;
-      // No initial src: avoid showing a stale, browser-cached track on page load.
-      const baseUrl = badge.dataset.badgeUrl;
+      const container = badge.closest(".spotify-now-playing");
+      const badgeUrl = badge.dataset.badgeUrl;
+      const statusUrl = badge.dataset.statusUrl?.trim();
       let latestRequest = 0;
 
-      function refreshSpotifyBadge() {
+      async function refreshSpotifyBadge() {
         if (document.visibilityState !== "visible") return;
         const requestId = ++latestRequest;
-        const url = new URL(baseUrl, window.location.href);
+
+        if (statusUrl) {
+          try {
+            const response = await fetch(statusUrl, { cache: "no-store" });
+            if (!response.ok) throw new Error("Spotify playback status unavailable");
+            const state = await response.json();
+            if (requestId !== latestRequest) return;
+            if (typeof state.isPlaying !== "boolean") throw new Error("Bad playback response");
+            if (!state.isPlaying) {
+              container.hidden = true;
+              badge.style.visibility = "hidden";
+              return;
+            }
+          } catch (error) {
+            // Never display a stale track when playback status cannot be checked.
+            if (requestId === latestRequest) container.hidden = true;
+            return;
+          }
+        }
+
+        // Cache-bust and fully decode artwork before showing it.
+        const url = new URL(badgeUrl, window.location.href);
         url.searchParams.set("_refresh", String(Date.now()));
-        // Load and decode a fresh image before showing or replacing the badge.
-        const next = new Image();
-        next.onload = async () => {
-          try { await next.decode(); } catch (_) { /* already loaded */ }
+        const image = new Image();
+        image.onload = async () => {
+          try { await image.decode(); } catch (_) { /* already loaded */ }
           if (requestId !== latestRequest) return;
-          badge.src = next.src;
+          badge.src = image.src;
           badge.style.visibility = "visible";
+          container.hidden = false;
         };
-        next.src = url.href;
+        image.src = url.href;
       }
 
+      // Avoid showing the old "Winter" artwork during the first request.
+      container.hidden = true;
       refreshSpotifyBadge();
       window.setInterval(refreshSpotifyBadge, 30000);
       document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") refreshSpotifyBadge();
       });
-    })();
-  </script>
+    })();  </script>
   <script src="main.js?v=20260306"></script>
   <script type="module">
     import { initTopbar } from "./js/topbar.js";
