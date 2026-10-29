@@ -42,7 +42,7 @@
       </div>
       <section class="spotify-now-playing" aria-label="Spotify now playing">
         <a href="https://spotifystats.com/badge/536a27da3b29a3ac0a8c0314c1c02658056b8b56/open" aria-label="Open my current Spotify track">
-          <img id="spotifyNowPlayingBadge" src="https://spotifystats.com/badge/536a27da3b29a3ac0a8c0314c1c02658056b8b56.svg" alt="Now playing on Spotify" width="480" height="104" loading="lazy" decoding="async" />
+          <img id="spotifyNowPlayingBadge" data-badge-url="https://spotifystats.com/badge/536a27da3b29a3ac0a8c0314c1c02658056b8b56.svg" alt="Now playing on Spotify" width="480" height="104" decoding="async" style="visibility: hidden; aspect-ratio: 480 / 104;" />
         </a>
       </section>
     </section>
@@ -57,7 +57,8 @@
     (() => {
       const badge = document.getElementById("spotifyNowPlayingBadge");
       if (!badge) return;
-      const baseUrl = badge.getAttribute("src").split("?")[0];
+      // No initial src: avoid showing a stale, browser-cached track on page load.
+      const baseUrl = badge.dataset.badgeUrl;
       let latestRequest = 0;
 
       function refreshSpotifyBadge() {
@@ -65,10 +66,13 @@
         const requestId = ++latestRequest;
         const url = new URL(baseUrl, window.location.href);
         url.searchParams.set("_refresh", String(Date.now()));
-        // Preload so a temporary error doesn't replace the working image.
+        // Load and decode a fresh image before showing or replacing the badge.
         const next = new Image();
-        next.onload = () => {
-          if (requestId === latestRequest) badge.src = next.src;
+        next.onload = async () => {
+          try { await next.decode(); } catch (_) { /* already loaded */ }
+          if (requestId !== latestRequest) return;
+          badge.src = next.src;
+          badge.style.visibility = "visible";
         };
         next.src = url.href;
       }
