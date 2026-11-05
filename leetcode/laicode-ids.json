@@ -265,5 +265,6 @@
   "rightshiftbyncharacters": 397,
   "reversewordsinasentencei": 84,
   "minimumcutsforpalindromes": 143,
-  "kthsmallestwithonly357asfactors": 193
+  "kthsmallestwithonly357asfactors": 193,
+  "maxproductofcuttingrope": 87
 }
