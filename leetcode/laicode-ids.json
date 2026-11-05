@@ -266,5 +266,14 @@
   "reversewordsinasentencei": 84,
   "minimumcutsforpalindromes": 143,
   "kthsmallestwithonly357asfactors": 193,
-  "maxproductofcuttingrope": 87
+  "maxproductofcuttingrope": 87,
+  "generaterandommaze": 218,
+  "reverselinkedlistiterative": 34,
+  "reverselinkedlistrecursive": 653,
+  "preordertraversalofbinarytreeiterative": 44,
+  "preordertraversalofbinarytreerecursive": 655,
+  "inordertraversalofbinarytreeiterative": 43,
+  "inordertraversalofbinarytreerecursive": 654,
+  "postordertraversalofbinarytreeiterative": 45,
+  "postordertraversalofbinarytreerecursive": 656
 }
